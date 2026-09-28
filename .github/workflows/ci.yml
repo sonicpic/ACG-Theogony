@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.13"
+      - name: Install
+        run: |
+          uv sync --group dev
+          npm ci --no-audit --no-fund
+      - name: Lint
+        run: uv run ruff check theogony tests
+      - name: Test
+        run: uv run pytest tests/ -q
+      - name: Schema 漂移校验（OpenAPI → TS 类型）
+        run: |
+          npm run gen
+          git diff --exit-code packages/shared/src/api.d.ts data/openapi.json || {
+            echo "::error::后端 schema 与已提交的前端类型不一致，请运行 npm run gen 并提交"; exit 1;
+          }
+
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install
+        run: npm ci --no-audit --no-fund
+      - name: Build
+        run: npm run build -w apps/web
+        env:
+          NEXT_TELEMETRY_DISABLED: 1

@@ -73,6 +73,13 @@ async def run(limit: int | None, force: bool, provider_name: str | None, concurr
         print("[✗] 未配置任何 LLM 提供方（.env: DEEPSEEK_API_KEY 或 LUNA_API_KEY）")
         return
     print(f"[*] 使用提供方: {provider.name} / 模型 {provider.model}")
+    from theogony.core.llm import preflight
+
+    try:
+        await preflight(provider)
+    except RuntimeError as e:
+        print(f"[✗] {e}")
+        return
 
     with session_scope() as session:
         query = select(Character).order_by(Character.wiki_id)

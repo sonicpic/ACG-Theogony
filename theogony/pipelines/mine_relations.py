@@ -45,6 +45,13 @@ async def run(limit_batches: int | None, provider_name: str | None, concurrency:
         print("[✗] 未配置任何 LLM 提供方")
         return
     print(f"[*] 使用提供方: {provider.name} / 模型 {provider.model}")
+    from theogony.core.llm import preflight
+
+    try:
+        await preflight(provider)
+    except RuntimeError as e:
+        print(f"[✗] {e}")
+        return
 
     with session_scope() as session:
         chars = session.execute(select(Character)).scalars().all()

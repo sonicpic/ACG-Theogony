@@ -1,0 +1,7 @@
+{
+  "name": "@theogony/shared",
+  "version": "2.0.0",
+  "private": true,
+  "types": "./src/api.d.ts",
+  "main": "./src/api.d.ts"
+}

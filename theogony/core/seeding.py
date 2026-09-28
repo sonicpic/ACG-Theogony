@@ -253,11 +253,17 @@ def seed_from_raw(session, *, preserve_reviews: bool = True) -> dict:
 
     session.flush()
 
-    # 名称 → id 映射（含别名）
+    # 名称 → id 映射（含别名）；同名冲突时优先编号最小的原版角色
     name_to_id: dict[str, str] = {}
-    for cid, name in session.execute(select(Character.id, Character.name)):
-        name_to_id[name] = cid
-    for alias, cid in session.execute(select(Alias.alias, Alias.character_id)):
+    for cid, name in session.execute(
+        select(Character.id, Character.name).order_by(Character.wiki_id)
+    ):
+        name_to_id.setdefault(name, cid)
+    for alias, cid in session.execute(
+        select(Alias.alias, Alias.character_id)
+        .join(Character, Alias.character_id == Character.id)
+        .order_by(Character.wiki_id)
+    ):
         name_to_id.setdefault(alias, cid)
 
     # 关系

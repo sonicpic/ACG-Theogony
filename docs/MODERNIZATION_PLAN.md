@@ -2,6 +2,10 @@
 
 > 生成于 2026-09-28。基于对仓库现状的完整代码审查。
 
+> **✅ 落地状态（2026-09-28，同日执行完成）**：本方案 Phase 0~4 与全部头脑风暴功能已实现并通过验证（17 项 pytest 全绿、Next.js 16 生产构建通过、浏览器冒烟通过）。
+> 新架构：`theogony/`（Python：core + pipelines + api）、`apps/web/`（Next.js 16）、`packages/shared/`（OpenAPI 自动生成 TS 类型）。
+> 已落地功能清单见文末「附录 A · v2 功能交付清单」。待办仅剩：配置有效 LLM Key 后运行 `npm run enrich && npm run mine`（当前 .env 的 DeepSeek Key 已失效 401；gpt-luna-5.6 填入 LUNA_* 即激活联网研究与语义检索）。
+
 ---
 
 ## 一、项目背景还原
@@ -273,3 +277,57 @@ Next.js 14 + react-force-graph-2d（单页 Canvas 2D 力导向图）
 | LLM 幻觉污染关系数据 | 所有 LLM 数据带 confidence/evidence，默认只在"审核后"全量展示 |
 | 版权 | 项目定位为资料聚合与学术性可视化，引用 Mooncell 遵循其 CC BY-NC-SA 协议并标注来源；商用需重审 |
 | Next 16 迁移成本 | 现有代码量小（1 页面 1 组件），重写比重构快，直接按新架构写 |
+
+---
+
+## 附录 A · v2 功能交付清单（2026-09-28）
+
+### 重构交付（Phase 0~4 全部完成）
+
+| 项 | 状态 |
+|---|---|
+| git 仓库 + monorepo（npm workspaces + uv） | ✅ |
+| Pydantic v2 单一 schema 源 → OpenAPI → openapi-typescript 自动生成 TS 类型 | ✅ CI 强校验漂移 |
+| SQLite(WAL) + FTS5（中文+拼音前缀）+ 别名表 | ✅ |
+| 异步爬虫（httpx 并发，region 全量抓取修复） | ✅ `npm run scrape` |
+| LLM 增强管道（JSON mode + Pydantic 校验 + 并发 8 + 断点续传 + 预检报错） | ✅ 待有效 Key |
+| 关系挖掘（按神话体系分批 → 审核队列） | ✅ 待有效 Key |
+| FastAPI 全端点 + /docs 交互文档 | ✅ |
+| Next.js 16 + React 19 + Tailwind 4 + TanStack Query + Zustand | ✅ |
+| Docker Compose（api+web）+ GitHub Actions CI | ✅ |
+
+### 新功能交付（头脑风暴全部落地）
+
+| 功能 | 入口 | 状态 |
+|---|---|---|
+| 关系路径探索（六度分隔） | 图谱右上「关系路径探索」/ `GET /api/paths` | ✅ |
+| Ego 星系图（二度邻居） | 角色页 `/character/{id}` | ✅ |
+| 神话地理模式 | 图谱左上「神话地理」 | ✅ |
+| 时间轴回放（实装顺序） | 图谱左侧「时间轴」滑杆 | ✅ |
+| Louvain 社区聚类着色 | 图谱左上「按社区」着色 | ✅ |
+| 家谱树视图 | 角色页「家族树」 | ✅ |
+| 3D 沉浸模式 | 图谱左上「3D」 | ✅ |
+| GraphRAG 问答（图检索+LLM，无 Key 纯图回退） | 图谱右下「问问图谱」/ `POST /api/ai/ask` | ✅ |
+| 自然语言查图（规则+LLM 双引擎） | 图谱左上「自然语言查图」 | ✅ |
+| 关系审核工作流（LLM/众包候选 → 批准进图） | `/review` | ✅ |
+| 图谱补全建议 | `GET /api/ai/suggest` | ✅ |
+| What-if 对决推演 | 角色页「What-if 对决推演」 | ✅ |
+| 多作品宇宙对照（schema 预留 source 字段 + 适配器接口） | 数据层就绪，待接入新数据源 | ◐ |
+| 真名/别名体系（多语言/别名检索） | 全库别名表 + FTS | ✅ |
+| 宝具/技能数据 | schema + 角色页展示（LLM 增强填充） | ◐ |
+| 每日猜角色 | `/game` | ✅ |
+| 众包关系编辑 | 角色页「补充一条关系」 | ✅ |
+| OG 分享卡 | `/character/{id}` 链接卡片自动生成 | ✅ |
+| iframe 嵌入卡片 | `/embed/character/{id}` | ✅ |
+| 开放 API | `http://127.0.0.1:8000/docs`（FastAPI OpenAPI） | ✅ |
+| 导出 PNG/SVG/GraphML(Gephi)/CSV | 图谱左下导出区 + `/api/export/*` | ✅ |
+| 图片代理（防盗链/跨域） | `/api/img?url=`（域名白名单+缓存） | ✅ |
+| 数据质量看板 | `/stats` | ✅ |
+
+✅ 完成 ◐ 机制就绪、数据待 LLM 增强/新数据源接入
+
+### RAG / gpt-luna-5.6 集成三层架构
+
+1. **语义向量检索**（可选）：`.env` 配 `EMBEDDINGS_*` → `/api/search` 与 GraphRAG 召回升级为词法+语义混合
+2. **gpt-luna-5.6 联网研究**：配 `LUNA_API_KEY/LUNA_API_BASE` → `npm run research -- --character <名>` 用 web_search/fetch_url 工具循环查证 wiki 后结构化入库；`/api/ai/research` 提供在线问答
+3. **纯图检索回退**：无任何 Key 时问答/查图仍可用（FTS5 + BFS + 模板回答），功能不缺失

@@ -1,0 +1,38 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - "8000:8000"
+    environment:
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY:-}
+      - LUNA_API_KEY=${LUNA_API_KEY:-}
+      - LUNA_API_BASE=${LUNA_API_BASE:-}
+      - LUNA_MODEL=${LUNA_MODEL:-gpt-luna-5.6}
+      - EMBEDDINGS_API_KEY=${EMBEDDINGS_API_KEY:-}
+      - EMBEDDINGS_API_BASE=${EMBEDDINGS_API_BASE:-}
+      - EMBEDDINGS_MODEL=${EMBEDDINGS_MODEL:-}
+      - REVIEW_TOKEN=${REVIEW_TOKEN:-}
+    volumes:
+      - theogony-data:/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8000/api/stats')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    ports:
+      - "3000:3000"
+    environment:
+      - API_ORIGIN=http://api:8000
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  theogony-data:

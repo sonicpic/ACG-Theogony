@@ -84,6 +84,27 @@ def get_provider(prefer: str | None = None) -> Provider | None:
     return candidates[0]
 
 
+async def preflight(provider: Provider) -> None:
+    """连通性预检：认证失败/网络不通时立即给出明确错误（而非逐条静默失败）。"""
+    try:
+        await provider.client.chat.completions.create(
+            model=provider.model,
+            messages=[{"role": "user", "content": "ping"}],
+            max_tokens=4,
+            extra_body=provider.extra_body or None,
+        )
+    except Exception as e:
+        msg = str(e)
+        if "auth" in msg.lower() or "401" in msg or "invalid_api_key" in msg:
+            raise RuntimeError(
+                f"[{provider.name}] API Key 认证失败（{provider.client.base_url}）。"
+                "请检查 .env 中对应 *_API_KEY 是否有效。"
+            ) from e
+        raise RuntimeError(
+            f"[{provider.name}] API 连接失败: {msg[:200]}（检查网络或 *_API_BASE 配置）"
+        ) from e
+
+
 async def chat_text(provider: Provider, prompt: str, *, system: str = "", temperature: float = 0.4, max_tokens: int = 2000) -> str:
     messages = []
     if system:
