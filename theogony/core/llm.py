@@ -6,7 +6,9 @@ Luna 提供方额外支持 web_search / fetch_url 工具调用循环（联网研
 
 from __future__ import annotations
 
+import asyncio
 import json
+import re
 from dataclasses import dataclass
 from typing import TypeVar
 
@@ -16,6 +18,9 @@ from pydantic import BaseModel
 from theogony.core.config import get_settings
 
 T = TypeVar("T", bound=BaseModel)
+
+# 中转站风控限制：Luna 并发硬上限
+LUNA_MAX_CONCURRENCY = 2
 
 RESEARCH_TOOLS = [
     {
@@ -156,13 +161,21 @@ async def chat_json(
                 return schema.model_validate(parsed)
             return parsed  # type: ignore[return-value]
         except json.JSONDecodeError as e:
-            last_error = f"JSON 解析失败: {e}"
-        except Exception as e:  # 网络错误等
-            last_error = f"调用失败: {e}"
+            last_error = f"JSON 解析失败: {e}；原文前120字: {raw[:120]}"
+        except Exception as e:  # 网络/限流错误等
+            last_error = f"调用失败: {type(e).__name__}: {e}"
+        # 重试指数退避（对风控/限流友好）
+        if attempt < retries:
+            await asyncio.sleep(3 * (attempt + 1))
+    print(f"  [!] chat_json 最终失败 [{provider.model}]: {last_error[:300]}")
     return None
 
 
 def _strip_code_fence(text: str) -> str:
+    # 去掉推理模型可能内联的思考块
+    text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL)
+    if "<think>" in text:  # 未闭合的思考块：截取其后内容
+        text = text.split("<think>", 1)[1].split("</think>", 1)[-1]
     if text.startswith("```"):
         lines = text.strip("`").splitlines()
         if lines and lines[0].startswith(("json", "JSON")):

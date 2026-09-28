@@ -286,12 +286,20 @@ def seed_from_raw(session, *, preserve_reviews: bool = True) -> dict:
         seen_triples.add(triple)
 
         has_confidence = "confidence" in rel
-        origin = RelationOrigin.LLM if has_confidence else RelationOrigin.MANUAL
-        status = (
-            review_memory.get(triple, ReviewStatus.PENDING.value)
-            if has_confidence
-            else ReviewStatus.APPROVED.value
+        exported_origin = rel.get("origin")
+        origin = (
+            RelationOrigin(exported_origin)
+            if exported_origin in RelationOrigin._value2member_map_
+            else (RelationOrigin.LLM if has_confidence else RelationOrigin.MANUAL)
         )
+        # 状态优先级：导出文件显式 status > 既有审核记忆 > 默认（LLM 待审 / 手动即批）
+        exported_status = rel.get("status")
+        if exported_status in ReviewStatus._value2member_map_:
+            status = exported_status
+        elif has_confidence:
+            status = review_memory.get(triple, ReviewStatus.PENDING.value)
+        else:
+            status = ReviewStatus.APPROVED.value
         session.add(
             Relationship(
                 source_id=s,

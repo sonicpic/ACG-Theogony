@@ -73,7 +73,11 @@ async def run(limit: int | None, force: bool, provider_name: str | None, concurr
         print("[✗] 未配置任何 LLM 提供方（.env: DEEPSEEK_API_KEY 或 LUNA_API_KEY）")
         return
     print(f"[*] 使用提供方: {provider.name} / 模型 {provider.model}")
-    from theogony.core.llm import preflight
+    from theogony.core.llm import LUNA_MAX_CONCURRENCY, preflight
+
+    if provider.name == "luna":
+        concurrency = min(concurrency, LUNA_MAX_CONCURRENCY)
+        print(f"[*] Luna 提供方：并发已限制为 {concurrency}（中转站风控要求）")
 
     try:
         await preflight(provider)

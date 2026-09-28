@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import random
 
 from sqlalchemy import select
 
@@ -45,7 +46,11 @@ async def run(limit_batches: int | None, provider_name: str | None, concurrency:
         print("[✗] 未配置任何 LLM 提供方")
         return
     print(f"[*] 使用提供方: {provider.name} / 模型 {provider.model}")
-    from theogony.core.llm import preflight
+    from theogony.core.llm import LUNA_MAX_CONCURRENCY, preflight
+
+    if provider.name == "luna":
+        concurrency = min(concurrency, LUNA_MAX_CONCURRENCY)
+        print(f"[*] Luna 提供方：并发已限制为 {concurrency}（中转站风控要求）")
 
     try:
         await preflight(provider)
@@ -73,6 +78,7 @@ async def run(limit_batches: int | None, provider_name: str | None, concurrency:
 
         async def mine_batch(myth: str, members: list[Character]) -> None:
             async with sem:
+                await asyncio.sleep(random.uniform(0.5, 1.5))  # 请求间隔抖动，降低风控压力
                 member_names = sorted({m.name for m in members})
                 others = sorted(
                     {c.name for c in by_myth.get(myth, []) if c.name not in member_names}

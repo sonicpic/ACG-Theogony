@@ -120,7 +120,8 @@ def review_decide(
         rel = session.get(Relationship, relationship_id)
         if rel is None:
             raise HTTPException(404, f"关系不存在: {relationship_id}")
-        if rel.status != ReviewStatus.PENDING.value:
+        # approve 只能作用于待审；reject 还能撤销已批准（批量批准的安全阀）
+        if decision.action == "approve" and rel.status != ReviewStatus.PENDING.value:
             raise HTTPException(409, f"该关系已处理（{rel.status}）")
         rel.status = (
             ReviewStatus.APPROVED.value if decision.action == "approve" else ReviewStatus.REJECTED.value
@@ -139,12 +140,12 @@ def review_batch(
     decisions: dict[str, str],
     _: None = Depends(require_review_token),
 ):
-    """批量审核：{"<id>": "approve"|"reject", ...}"""
+    """批量审核：{"<id>": "approve"|"reject", ...}（reject 可撤销已批准项）"""
     approved, rejected, missing = 0, 0, 0
     with session_scope() as session:
         for rid_str, action in decisions.items():
             rel = session.get(Relationship, int(rid_str))
-            if rel is None or rel.status != ReviewStatus.PENDING.value:
+            if rel is None or (action == "approve" and rel.status != ReviewStatus.PENDING.value):
                 missing += 1
                 continue
             if action == "approve":
