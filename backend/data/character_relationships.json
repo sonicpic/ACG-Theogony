@@ -1,0 +1,101 @@
+{
+  "_comment": "角色关系数据库 - 手动维护的角色间关系",
+  "_format": {
+    "source_name": "源角色名（需与 raw_characters.json 中的 name 或 prototype 匹配）",
+    "target_name": "目标角色名",
+    "relationship": "关系类型（需与 schema.py 中的 RelationshipType 枚举值一致）",
+    "bidirectional": "是否双向关系（如 SIBLING_OF, ALLY_OF）"
+  },
+  "relationships": [
+    {
+      "source_name": "阿尔托莉雅·潘德拉贡",
+      "target_name": "莫德雷德",
+      "relationship": "PARENT_OF",
+      "bidirectional": false
+    },
+    {
+      "source_name": "吉尔伽美什",
+      "target_name": "恩奇都",
+      "relationship": "ALLY_OF",
+      "bidirectional": true
+    },
+    {
+      "source_name": "阿喀琉斯",
+      "target_name": "赫克托尔",
+      "relationship": "FOUGHT_WITH",
+      "bidirectional": true
+    },
+    {
+      "source_name": "阿喀琉斯",
+      "target_name": "赫克托尔",
+      "relationship": "ENEMY_OF",
+      "bidirectional": true
+    },
+    {
+      "source_name": "迦尔纳",
+      "target_name": "阿周那",
+      "relationship": "SIBLING_OF",
+      "bidirectional": true
+    },
+    {
+      "source_name": "迦尔纳",
+      "target_name": "阿周那",
+      "relationship": "ENEMY_OF",
+      "bidirectional": true
+    },
+    {
+      "source_name": "斯卡哈",
+      "target_name": "库·丘林",
+      "relationship": "MENTOR_OF",
+      "bidirectional": false
+    },
+    {
+      "source_name": "美狄亚",
+      "target_name": "伊阿宋",
+      "relationship": "SPOUSE_OF",
+      "bidirectional": true
+    },
+    {
+      "source_name": "赫拉克勒斯",
+      "target_name": "阿尔刻提斯",
+      "relationship": "ALLY_OF",
+      "bidirectional": true
+    },
+    {
+      "source_name": "源赖光",
+      "target_name": "酒吞童子",
+      "relationship": "ENEMY_OF",
+      "bidirectional": true
+    },
+    {
+      "source_name": "源赖光",
+      "target_name": "酒吞童子",
+      "relationship": "FOUGHT_WITH",
+      "bidirectional": true
+    },
+    {
+      "source_name": "项羽",
+      "target_name": "虞美人",
+      "relationship": "SPOUSE_OF",
+      "bidirectional": true
+    },
+    {
+      "source_name": "武藏",
+      "target_name": "小次郎",
+      "relationship": "FOUGHT_WITH",
+      "bidirectional": true
+    },
+    {
+      "source_name": "伊什塔尔",
+      "target_name": "埃列什基伽勒",
+      "relationship": "SIBLING_OF",
+      "bidirectional": true
+    },
+    {
+      "source_name": "罗摩",
+      "target_name": "悉多",
+      "relationship": "SPOUSE_OF",
+      "bidirectional": true
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+[
+  {
+    "id": "1",
+    "name": "玛修·基列莱特",
+    "class": "Shielder",
+    "prototype": "玛修·基列莱特",
+    "detail_url": "https://fgo.wiki/w/玛修·基列莱特",
+    "region": "现代创作",
+    "description": "玛修·基列莱特是迦勒底局的实验体，因融合了从者加拉哈德的灵基而成为亚从者，持有宝具“已然遥远的理想之城”。作为主角的忠实后辈与盾兵，她在人理修复之旅中守护御主，并逐渐探寻自我存在的意义。其坚韧的意志与纯粹的守护之心是队伍的核心支柱。",
+    "image_url": "https://media.fgo.wiki/9/9c/Servant001.jpg",
+    "metadata": {
+      "alignment": "秩序·善",
+      "gender": "女"
+    }
+  },
+  {
+    "id": "2",
+    "name": "阿尔托莉雅·潘德拉贡",
+    "class": "Saber",
+    "prototype": "阿尔托莉雅·潘德拉贡",
+    "detail_url": "https://fgo.wiki/w/阿尔托莉雅·潘德拉贡",
+    "region": "不列颠神话",
+    "description": "阿尔托莉雅·潘德拉贡是传说中的不列颠国王，以骑士王之名广为人知。她拔出石中剑，作为亚瑟王统治国家，并带领圆桌骑士团追求理想。在FGO中，她作为Saber职阶的从者被召唤，是玩家最初也是最可靠的伙伴之一，其正直高洁的骑士精神贯穿始终。",
+    "image_url": "https://media.fgo.wiki/c/ca/Servant002.jpg",
+    "mythology_background": "亚瑟王传说的核心人物，是不列颠传说中的伟大国王，以骑士道、圣剑和圆桌骑士团闻名于世。",
+    "metadata": {
+      "alignment": "秩序·善",
+      "gender": "女"
+    }
+  },
+  {
+    "id": "3",
+    "name": "阿尔托莉雅·潘德拉贡〔Alter〕",
+    "class": "Saber",
+    "prototype": "阿尔托莉雅·潘德拉贡〔Alter〕",
+    "detail_url": "https://fgo.wiki/w/阿尔托莉雅·潘德拉贡〔Alter〕",
+    "region": "不列颠神话",
+    "description": "阿尔托莉雅·潘德拉贡〔Alter〕是亚瑟王被圣杯的诅咒侵蚀后诞生的反转姿态。她舍弃了王的仁慈与理想，以冷酷无情的“暴君”方式统治，认为这才是更有效率地守护国家的方法。在FGO中作为Saber登场，拥有强大的对城宝具“誓约胜利之剑”，但其光芒因反转而化为漆黑的毁灭洪流。",
+    "image_url": "https://media.fgo.wiki/2/27/Servant003.jpg",
+    "mythology_background": "原型为不列颠传说中著名的亚瑟王，是率领圆桌骑士并持有圣剑的传奇国王。",
+    "metadata": {
+      "alignment": "秩序·恶",
+      "gender": "女"
+    }
+  },
+  {
+    "id": "4",
+    "name": "阿尔托莉雅·潘德拉贡〔Lily〕",
+    "class": "Saber",
+    "prototype": "阿尔托莉雅·潘德拉贡〔Lily〕",
+    "detail_url": "https://fgo.wiki/w/阿尔托莉雅·潘德拉贡〔Lily〕",
+    "region": "不列颠神话",
+    "description": "阿尔托莉雅·潘德拉贡〔Lily〕是亚瑟王传说中，尚未成为不列颠国王的少女时期姿态。她手持选定之剑，胸怀理想，以纯洁无垢的心灵踏上成为王者的修行之旅。在FGO中，她作为Saber职阶从者登场，性格天真烂漫且充满活力，象征着亚瑟王传奇的起点与可能性。",
+    "image_url": "https://media.fgo.wiki/e/e9/Servant004.jpg",
+    "mythology_background": "原型源自不列颠传说中的亚瑟王，为不列颠的传奇国王，圆桌骑士团的领导者，持有圣剑Excalibur。",
+    "metadata": {
+      "alignment": "秩序·善",
+      "gender": "女"
+    }
+  },
+  {
+    "id": "5",
+    "name": "尼禄·克劳狄乌斯",
+    "class": "Saber",
+    "prototype": "尼禄·克劳狄乌斯",
+    "detail_url": "https://fgo.wiki/w/尼禄·克劳狄乌斯",
+    "region": "罗马神话",
+    "description": "尼禄·克劳狄乌斯是罗马帝国第五任皇帝，以艺术爱好和暴君之名闻名于世。在FGO中作为Saber职阶登场，自称“余”，身着红色礼装，手持原初之火（Aestus Estus）。她热爱艺术与表演，性格开朗自信，常举办“尼禄祭”等活动，其宝具“邀至心荡神驰的黄金剧场（Laus Saint Claudius）”能展开固有结界。",
+    "image_url": "https://media.fgo.wiki/5/59/Servant005.jpg",
+    "mythology_background": "罗马帝国皇帝，在罗马神话与历史记载中，以暴虐、纵火和迫害基督徒而臭名昭著，但也以赞助艺术和建筑闻名。",
+    "metadata": {
+      "alignment": "混沌·善",
+      "gender": "女"
+    }
+  },
+  {
+    "id": "7",
+    "name": "盖乌斯·尤利乌斯·恺撒",
+    "class": "Saber",
+    "prototype": "盖乌斯·尤利乌斯·恺撒",
+    "detail_url": "https://fgo.wiki/w/盖乌斯·尤利乌斯·恺撒",
+    "region": "史实人物",
+    "description": "盖乌斯·尤利乌斯·恺撒是古罗马杰出的军事统帅、政治家，罗马帝国的奠基者。他征服高卢，击败庞培，实行独裁统治，最终在元老院遇刺。在FGO中以Saber职阶登场，形象被设计为手持短剑的肥胖男性，自称因传说与克丽奥佩脱拉的关系而被赋予了不符合史实的体型，性格豪爽且善于谋略。",
+    "image_url": "https://media.fgo.wiki/f/f9/Servant007.jpg",
+    "mythology_background": "作为真实历史人物，恺撒的事迹主要记载于《高卢战记》等史书，其形象在后世文学与传说中被神化，与埃及艳后的故事广为流传。",
+    "metadata": {
+      "alignment": "秩序·善",
+      "gender": "男"
+    }
+  },
+  {
+    "id": "8",
+    "name": "阿蒂拉",
+    "class": "Saber",
+    "prototype": "阿蒂拉",
+    "detail_url": "https://fgo.wiki/w/阿蒂拉",
+    "region": "史实人物",
+    "description": "阿蒂拉是FGO中以匈人领袖为原型的Saber从者，被称为“上帝之鞭”的游牧民族之王。在游戏中，其真实身份被揭示为游星尖兵“白色巨人”赛法卢的终端，手持光之剑“军神之剑”。她既是毁灭文明的灾厄化身，又因与御主的羁绊而展现出寻求自身存在意义的迷茫与人性一面。",
+    "image_url": "https://media.fgo.wiki/0/0b/Servant008.jpg",
+    "mythology_background": "原型为公元5世纪匈人帝国首领阿蒂拉，欧洲历史中常被描绘为带来毁灭的“上帝之鞭”。",
+    "metadata": {
+      "alignment": "混沌·善",
+      "gender": "女"
+    }
+  }
+]

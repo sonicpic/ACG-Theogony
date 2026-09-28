@@ -1,0 +1,46 @@
+{
+  "raw_count": 465,
+  "node_count": 472,
+  "link_count": 83,
+  "missing_region_count": 465,
+  "missing_class_count": 0,
+  "missing_description_count": 465,
+  "orphan_node_count": 397,
+  "sample_missing_region": [
+    "玛修·基列莱特",
+    "阿尔托莉雅·潘德拉贡",
+    "阿尔托莉雅·潘德拉贡〔Alter〕",
+    "阿尔托莉雅·潘德拉贡〔Lily〕",
+    "尼禄·克劳狄乌斯",
+    "齐格飞",
+    "盖乌斯·尤利乌斯·恺撒",
+    "阿蒂拉",
+    "吉尔·德·雷",
+    "骑士迪昂"
+  ],
+  "sample_missing_class": [],
+  "sample_missing_description": [
+    "玛修·基列莱特",
+    "阿尔托莉雅·潘德拉贡",
+    "阿尔托莉雅·潘德拉贡〔Alter〕",
+    "阿尔托莉雅·潘德拉贡〔Lily〕",
+    "尼禄·克劳狄乌斯",
+    "齐格飞",
+    "盖乌斯·尤利乌斯·恺撒",
+    "阿蒂拉",
+    "吉尔·德·雷",
+    "骑士迪昂"
+  ],
+  "sample_orphan_nodes": [
+    "玛修·基列莱特",
+    "尼禄·克劳狄乌斯",
+    "齐格飞",
+    "盖乌斯·尤利乌斯·恺撒",
+    "阿蒂拉",
+    "吉尔·德·雷",
+    "骑士迪昂",
+    "卫宫",
+    "罗宾汉",
+    "尤瑞艾莉"
+  ]
+}
