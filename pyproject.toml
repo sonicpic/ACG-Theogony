@@ -1,0 +1,56 @@
+[project]
+name = "acg-theogony"
+version = "2.0.0"
+description = "ACG × mythology relationship knowledge graph: pipelines, API and semantic layer"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "pydantic>=2.9",
+    "pydantic-settings>=2.6",
+    "sqlalchemy>=2.0.36",
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+    "httpx>=0.28",
+    "openai>=1.60",
+    "beautifulsoup4>=4.12",
+    "lxml>=5.3",
+    "pypinyin>=0.53",
+    "networkx>=3.4",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "pytest-asyncio>=0.24",
+    "ruff>=0.8",
+    "mypy>=1.13",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["theogony"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+# E501 行宽；RUF001-003 中文全角标点误报；UP042 StrEnum 迁移（暂缓）；B008 FastAPI Depends 惯用法
+# B007 循环变量占位；UP047 泛型新语法（暂缓）；RUF005/RUF012 风格项
+ignore = ["E501", "RUF001", "RUF002", "RUF003", "UP042", "B008", "B007", "UP047", "RUF005", "RUF012"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.mypy]
+python_version = "3.13"
+ignore_missing_imports = true
+check_untyped_defs = true
+
+[tool.uv]
+package = true

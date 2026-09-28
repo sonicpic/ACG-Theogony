@@ -1,0 +1,2374 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ACG Theogony API",
+    "description": "ACG × 神话原型 关系知识图谱 API",
+    "version": "2.0.0"
+  },
+  "paths": {
+    "/api/characters": {
+      "get": {
+        "tags": [
+          "characters"
+        ],
+        "summary": "List Characters",
+        "operationId": "list_characters_api_characters_get",
+        "parameters": [
+          {
+            "name": "mythology",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Mythology"
+            }
+          },
+          {
+            "name": "className",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Classname"
+            }
+          },
+          {
+            "name": "gender",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Gender"
+            }
+          },
+          {
+            "name": "hasRelation",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Hasrelation"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Search"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 500,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CharacterListItem"
+                  },
+                  "title": "Response List Characters Api Characters Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/characters/meta/options": {
+      "get": {
+        "tags": [
+          "characters"
+        ],
+        "summary": "Character Options",
+        "description": "筛选项元数据（职阶/体系/来源列表）。注意：必须在 /{character_id} 之前声明。",
+        "operationId": "character_options_api_characters_meta_options_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/characters/{character_id}": {
+      "get": {
+        "tags": [
+          "characters"
+        ],
+        "summary": "Get Character",
+        "operationId": "get_character_api_characters__character_id__get",
+        "parameters": [
+          {
+            "name": "character_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Character Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CharacterDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/characters/{character_id}/relationships": {
+      "get": {
+        "tags": [
+          "characters"
+        ],
+        "summary": "Character Relationships",
+        "operationId": "character_relationships_api_characters__character_id__relationships_get",
+        "parameters": [
+          {
+            "name": "character_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Character Id"
+            }
+          },
+          {
+            "name": "includePending",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Includepending"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RelationshipDTO"
+                  },
+                  "title": "Response Character Relationships Api Characters  Character Id  Relationships Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/characters/{character_id}/family": {
+      "get": {
+        "tags": [
+          "characters"
+        ],
+        "summary": "Character Family",
+        "operationId": "character_family_api_characters__character_id__family_get",
+        "parameters": [
+          {
+            "name": "character_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Character Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/characters/{character_id}/ego": {
+      "get": {
+        "tags": [
+          "characters"
+        ],
+        "summary": "Character Ego",
+        "operationId": "character_ego_api_characters__character_id__ego_get",
+        "parameters": [
+          {
+            "name": "character_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Character Id"
+            }
+          },
+          {
+            "name": "hops",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 3,
+              "minimum": 1,
+              "default": 1,
+              "title": "Hops"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/relationships": {
+      "get": {
+        "tags": [
+          "relationships"
+        ],
+        "summary": "List Relationships",
+        "operationId": "list_relationships_api_relationships_get",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "name": "origin",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Origin"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Type"
+            }
+          },
+          {
+            "name": "confidence",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Confidence"
+            }
+          },
+          {
+            "name": "characterId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Characterid"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 1000,
+              "default": 100,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "relationships"
+        ],
+        "summary": "Submit Relationship",
+        "description": "众包提交关系（进入审核队列）。",
+        "operationId": "submit_relationship_api_relationships_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RelationshipSubmit"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/review/pending": {
+      "get": {
+        "tags": [
+          "relationships"
+        ],
+        "summary": "Review Pending",
+        "operationId": "review_pending_api_review_pending_get",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "x-review-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Review-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/review/{relationship_id}": {
+      "post": {
+        "tags": [
+          "relationships"
+        ],
+        "summary": "Review Decide",
+        "operationId": "review_decide_api_review__relationship_id__post",
+        "parameters": [
+          {
+            "name": "relationship_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Relationship Id"
+            }
+          },
+          {
+            "name": "x-review-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Review-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewDecision"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/review/batch": {
+      "post": {
+        "tags": [
+          "relationships"
+        ],
+        "summary": "Review Batch",
+        "description": "批量审核：{\"<id>\": \"approve\"|\"reject\", ...}",
+        "operationId": "review_batch_api_review_batch_post",
+        "parameters": [
+          {
+            "name": "x-review-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Review-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "title": "Decisions"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/graph": {
+      "get": {
+        "tags": [
+          "graph"
+        ],
+        "summary": "Get Graph",
+        "operationId": "get_graph_api_graph_get",
+        "parameters": [
+          {
+            "name": "mythologies",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Mythologies"
+            }
+          },
+          {
+            "name": "types",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Types"
+            }
+          },
+          {
+            "name": "classes",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Classes"
+            }
+          },
+          {
+            "name": "gender",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Gender"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Search"
+            }
+          },
+          {
+            "name": "onlyRelated",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Onlyrelated"
+            }
+          },
+          {
+            "name": "includeMythNodes",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Includemythnodes"
+            }
+          },
+          {
+            "name": "egoCenter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Egocenter"
+            }
+          },
+          {
+            "name": "egoHops",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 3,
+              "minimum": 1,
+              "default": 1,
+              "title": "Egohops"
+            }
+          },
+          {
+            "name": "maxWikiId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Maxwikiid"
+            }
+          },
+          {
+            "name": "source",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Source"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GraphDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/graph/clusters": {
+      "get": {
+        "tags": [
+          "graph"
+        ],
+        "summary": "Get Clusters",
+        "operationId": "get_clusters_api_graph_clusters_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/graph/refresh": {
+      "post": {
+        "tags": [
+          "graph"
+        ],
+        "summary": "Refresh Graph",
+        "operationId": "refresh_graph_api_graph_refresh_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/paths": {
+      "get": {
+        "tags": [
+          "paths"
+        ],
+        "summary": "Find Path",
+        "description": "from/to 为角色 ID（如 c1、c496）。",
+        "operationId": "find_path_api_paths_get",
+        "parameters": [
+          {
+            "name": "from_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "From Id"
+            }
+          },
+          {
+            "name": "to_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "To Id"
+            }
+          },
+          {
+            "name": "maxHops",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 6,
+              "title": "Maxhops"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PathDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/search": {
+      "get": {
+        "tags": [
+          "search"
+        ],
+        "summary": "Search",
+        "operationId": "search_api_search_get",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "title": "Q"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 50,
+              "default": 10,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResponseDTO"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stats": {
+      "get": {
+        "tags": [
+          "stats"
+        ],
+        "summary": "Get Stats",
+        "operationId": "get_stats_api_stats_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatsDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/games/daily": {
+      "get": {
+        "tags": [
+          "games"
+        ],
+        "summary": "Daily Game",
+        "operationId": "daily_game_api_games_daily_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/games/daily/guess": {
+      "post": {
+        "tags": [
+          "games"
+        ],
+        "summary": "Daily Guess",
+        "operationId": "daily_guess_api_games_daily_guess_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DailyGuess"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/games/daily/reveal": {
+      "post": {
+        "tags": [
+          "games"
+        ],
+        "summary": "Daily Reveal",
+        "operationId": "daily_reveal_api_games_daily_reveal_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ai/ask": {
+      "post": {
+        "tags": [
+          "ai"
+        ],
+        "summary": "Ask",
+        "operationId": "ask_api_ai_ask_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AskRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AskResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ai/nlq": {
+      "post": {
+        "tags": [
+          "ai"
+        ],
+        "summary": "Nlq",
+        "operationId": "nlq_api_ai_nlq_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NlqRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ai/whatif": {
+      "post": {
+        "tags": [
+          "ai"
+        ],
+        "summary": "Whatif",
+        "operationId": "whatif_api_ai_whatif_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WhatIfRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WhatIfResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ai/suggest": {
+      "get": {
+        "tags": [
+          "ai"
+        ],
+        "summary": "Suggest",
+        "operationId": "suggest_api_ai_suggest_get",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "default": 20,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SuggestionDTO"
+                  },
+                  "title": "Response Suggest Api Ai Suggest Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ai/research": {
+      "post": {
+        "tags": [
+          "ai"
+        ],
+        "summary": "Research",
+        "description": "gpt-luna-5.6 联网研究（需配置 LUNA_*）。",
+        "operationId": "research_api_ai_research_post",
+        "parameters": [
+          {
+            "name": "question",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Question"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/export/graphml": {
+      "get": {
+        "tags": [
+          "exports"
+        ],
+        "summary": "Export Graphml",
+        "operationId": "export_graphml_api_export_graphml_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/export/csv": {
+      "get": {
+        "tags": [
+          "exports"
+        ],
+        "summary": "Export Csv",
+        "operationId": "export_csv_api_export_csv_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/export/nodes": {
+      "get": {
+        "tags": [
+          "exports"
+        ],
+        "summary": "Export Nodes",
+        "operationId": "export_nodes_api_export_nodes_get",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 5000,
+              "default": 1000,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/img": {
+      "get": {
+        "tags": [
+          "proxy"
+        ],
+        "summary": "Img Proxy",
+        "operationId": "img_proxy_api_img_get",
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Url"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Size"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AskCitation": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "relation": {
+            "type": "string",
+            "title": "Relation",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "AskCitation"
+      },
+      "AskRequest": {
+        "properties": {
+          "question": {
+            "type": "string",
+            "maxLength": 300,
+            "title": "Question"
+          }
+        },
+        "type": "object",
+        "required": [
+          "question"
+        ],
+        "title": "AskRequest"
+      },
+      "AskResponse": {
+        "properties": {
+          "answer": {
+            "type": "string",
+            "title": "Answer"
+          },
+          "citations": {
+            "items": {
+              "$ref": "#/components/schemas/AskCitation"
+            },
+            "type": "array",
+            "title": "Citations",
+            "default": []
+          },
+          "subgraph": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GraphDTO"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "engine": {
+            "type": "string",
+            "title": "Engine",
+            "default": "graph"
+          }
+        },
+        "type": "object",
+        "required": [
+          "answer"
+        ],
+        "title": "AskResponse"
+      },
+      "CharacterDTO": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "wikiId": {
+            "type": "integer",
+            "title": "Wikiid"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "aliases": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Aliases",
+            "default": []
+          },
+          "className": {
+            "type": "string",
+            "title": "Classname",
+            "default": ""
+          },
+          "prototype": {
+            "type": "string",
+            "title": "Prototype",
+            "default": ""
+          },
+          "mythology": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mythology"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "default": ""
+          },
+          "mythologyBackground": {
+            "type": "string",
+            "title": "Mythologybackground",
+            "default": ""
+          },
+          "alignment": {
+            "type": "string",
+            "title": "Alignment",
+            "default": ""
+          },
+          "gender": {
+            "type": "string",
+            "title": "Gender",
+            "default": ""
+          },
+          "imageUrl": {
+            "type": "string",
+            "title": "Imageurl",
+            "default": ""
+          },
+          "detailUrl": {
+            "type": "string",
+            "title": "Detailurl",
+            "default": ""
+          },
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "default": "fgo"
+          },
+          "extra": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Extra",
+            "default": {}
+          },
+          "degree": {
+            "type": "integer",
+            "title": "Degree",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "wikiId",
+          "name"
+        ],
+        "title": "CharacterDTO"
+      },
+      "CharacterListItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "className": {
+            "type": "string",
+            "title": "Classname",
+            "default": ""
+          },
+          "mythology": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mythology"
+          },
+          "imageUrl": {
+            "type": "string",
+            "title": "Imageurl",
+            "default": ""
+          },
+          "degree": {
+            "type": "integer",
+            "title": "Degree",
+            "default": 0
+          },
+          "hasRelation": {
+            "type": "boolean",
+            "title": "Hasrelation",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "CharacterListItem"
+      },
+      "Confidence": {
+        "type": "string",
+        "enum": [
+          "low",
+          "medium",
+          "high",
+          "verified"
+        ],
+        "title": "Confidence"
+      },
+      "DailyGuess": {
+        "properties": {
+          "guess": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Guess"
+          }
+        },
+        "type": "object",
+        "required": [
+          "guess"
+        ],
+        "title": "DailyGuess"
+      },
+      "GraphDTO": {
+        "properties": {
+          "nodes": {
+            "items": {
+              "$ref": "#/components/schemas/GraphNodeDTO"
+            },
+            "type": "array",
+            "title": "Nodes"
+          },
+          "links": {
+            "items": {
+              "$ref": "#/components/schemas/GraphLinkDTO"
+            },
+            "type": "array",
+            "title": "Links"
+          },
+          "meta": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Meta",
+            "default": {}
+          }
+        },
+        "type": "object",
+        "required": [
+          "nodes",
+          "links"
+        ],
+        "title": "GraphDTO"
+      },
+      "GraphLinkDTO": {
+        "properties": {
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "target": {
+            "type": "string",
+            "title": "Target"
+          },
+          "type": {
+            "$ref": "#/components/schemas/RelationshipType"
+          },
+          "directed": {
+            "type": "boolean",
+            "title": "Directed",
+            "default": true
+          },
+          "confidence": {
+            "type": "string",
+            "title": "Confidence",
+            "default": "verified"
+          }
+        },
+        "type": "object",
+        "required": [
+          "source",
+          "target",
+          "type"
+        ],
+        "title": "GraphLinkDTO"
+      },
+      "GraphNodeDTO": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "kind": {
+            "type": "string",
+            "title": "Kind",
+            "default": "character"
+          },
+          "mythology": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mythology"
+          },
+          "className": {
+            "type": "string",
+            "title": "Classname",
+            "default": ""
+          },
+          "imageUrl": {
+            "type": "string",
+            "title": "Imageurl",
+            "default": ""
+          },
+          "degree": {
+            "type": "integer",
+            "title": "Degree",
+            "default": 0
+          },
+          "wikiId": {
+            "type": "integer",
+            "title": "Wikiid",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "GraphNodeDTO"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "NlqRequest": {
+        "properties": {
+          "query": {
+            "type": "string",
+            "maxLength": 200,
+            "title": "Query"
+          }
+        },
+        "type": "object",
+        "required": [
+          "query"
+        ],
+        "title": "NlqRequest"
+      },
+      "PathDTO": {
+        "properties": {
+          "found": {
+            "type": "boolean",
+            "title": "Found"
+          },
+          "distance": {
+            "type": "integer",
+            "title": "Distance",
+            "default": 0
+          },
+          "nodes": {
+            "items": {
+              "$ref": "#/components/schemas/GraphNodeDTO"
+            },
+            "type": "array",
+            "title": "Nodes",
+            "default": []
+          },
+          "steps": {
+            "items": {
+              "$ref": "#/components/schemas/PathStepDTO"
+            },
+            "type": "array",
+            "title": "Steps",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "found"
+        ],
+        "title": "PathDTO"
+      },
+      "PathStepDTO": {
+        "properties": {
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "target": {
+            "type": "string",
+            "title": "Target"
+          },
+          "type": {
+            "$ref": "#/components/schemas/RelationshipType"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "source",
+          "target",
+          "type"
+        ],
+        "title": "PathStepDTO"
+      },
+      "RelationOrigin": {
+        "type": "string",
+        "enum": [
+          "manual",
+          "llm",
+          "user",
+          "wiki"
+        ],
+        "title": "RelationOrigin"
+      },
+      "RelationshipDTO": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "sourceId": {
+            "type": "string",
+            "title": "Sourceid"
+          },
+          "targetId": {
+            "type": "string",
+            "title": "Targetid"
+          },
+          "type": {
+            "$ref": "#/components/schemas/RelationshipType"
+          },
+          "directed": {
+            "type": "boolean",
+            "title": "Directed",
+            "default": true
+          },
+          "confidence": {
+            "$ref": "#/components/schemas/Confidence"
+          },
+          "evidence": {
+            "type": "string",
+            "title": "Evidence",
+            "default": ""
+          },
+          "origin": {
+            "$ref": "#/components/schemas/RelationOrigin"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ReviewStatus",
+            "default": "approved"
+          },
+          "sourceName": {
+            "type": "string",
+            "title": "Sourcename",
+            "default": ""
+          },
+          "targetName": {
+            "type": "string",
+            "title": "Targetname",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "sourceId",
+          "targetId",
+          "type",
+          "confidence",
+          "origin"
+        ],
+        "title": "RelationshipDTO"
+      },
+      "RelationshipSubmit": {
+        "properties": {
+          "sourceId": {
+            "type": "string",
+            "title": "Sourceid"
+          },
+          "targetId": {
+            "type": "string",
+            "title": "Targetid"
+          },
+          "type": {
+            "$ref": "#/components/schemas/RelationshipType"
+          },
+          "evidence": {
+            "type": "string",
+            "maxLength": 200,
+            "title": "Evidence"
+          },
+          "contributor": {
+            "type": "string",
+            "maxLength": 32,
+            "title": "Contributor",
+            "default": "匿名"
+          }
+        },
+        "type": "object",
+        "required": [
+          "sourceId",
+          "targetId",
+          "type",
+          "evidence"
+        ],
+        "title": "RelationshipSubmit",
+        "description": "众包关系提交（进入审核队列）。"
+      },
+      "RelationshipType": {
+        "type": "string",
+        "enum": [
+          "PARENT_OF",
+          "SIBLING_OF",
+          "SPOUSE_OF",
+          "LOVER_OF",
+          "MASTER_OF",
+          "ALLY_OF",
+          "ENEMY_OF",
+          "FOUGHT_WITH",
+          "MENTOR_OF",
+          "PROTOTYPE_IS",
+          "GENDER_SWAP",
+          "DERIVED_FROM",
+          "COMPOSITE_OF",
+          "BELONGS_TO"
+        ],
+        "title": "RelationshipType",
+        "description": "关系类型（存储层只用规范方向，逆关系在入库时归一化）。"
+      },
+      "ReviewDecision": {
+        "properties": {
+          "action": {
+            "type": "string",
+            "pattern": "^(approve|reject)$",
+            "title": "Action"
+          },
+          "note": {
+            "type": "string",
+            "title": "Note",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "action"
+        ],
+        "title": "ReviewDecision"
+      },
+      "ReviewStatus": {
+        "type": "string",
+        "enum": [
+          "approved",
+          "pending",
+          "rejected"
+        ],
+        "title": "ReviewStatus"
+      },
+      "SearchHitDTO": {
+        "properties": {
+          "character": {
+            "$ref": "#/components/schemas/CharacterListItem"
+          },
+          "score": {
+            "type": "number",
+            "title": "Score",
+            "default": 0.0
+          },
+          "matchedOn": {
+            "type": "string",
+            "title": "Matchedon",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "character"
+        ],
+        "title": "SearchHitDTO"
+      },
+      "SearchResponseDTO": {
+        "properties": {
+          "query": {
+            "type": "string",
+            "title": "Query"
+          },
+          "semantic": {
+            "type": "boolean",
+            "title": "Semantic",
+            "default": false
+          },
+          "hits": {
+            "items": {
+              "$ref": "#/components/schemas/SearchHitDTO"
+            },
+            "type": "array",
+            "title": "Hits",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "query"
+        ],
+        "title": "SearchResponseDTO"
+      },
+      "StatsDTO": {
+        "properties": {
+          "characters": {
+            "type": "integer",
+            "title": "Characters"
+          },
+          "relationships": {
+            "type": "integer",
+            "title": "Relationships"
+          },
+          "approved": {
+            "type": "integer",
+            "title": "Approved"
+          },
+          "pending": {
+            "type": "integer",
+            "title": "Pending"
+          },
+          "enriched": {
+            "type": "integer",
+            "title": "Enriched"
+          },
+          "missingMythology": {
+            "type": "integer",
+            "title": "Missingmythology"
+          },
+          "missingDescription": {
+            "type": "integer",
+            "title": "Missingdescription"
+          },
+          "orphanNodes": {
+            "type": "integer",
+            "title": "Orphannodes"
+          },
+          "relationDist": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Relationdist",
+            "default": {}
+          },
+          "confidenceDist": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Confidencedist",
+            "default": {}
+          },
+          "mythologyDist": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Mythologydist",
+            "default": {}
+          },
+          "classDist": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Classdist",
+            "default": {}
+          },
+          "originDist": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Origindist",
+            "default": {}
+          }
+        },
+        "type": "object",
+        "required": [
+          "characters",
+          "relationships",
+          "approved",
+          "pending",
+          "enriched",
+          "missingMythology",
+          "missingDescription",
+          "orphanNodes"
+        ],
+        "title": "StatsDTO"
+      },
+      "SuggestionDTO": {
+        "properties": {
+          "sourceId": {
+            "type": "string",
+            "title": "Sourceid"
+          },
+          "targetId": {
+            "type": "string",
+            "title": "Targetid"
+          },
+          "commonNeighbors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Commonneighbors",
+            "default": []
+          },
+          "sameMythology": {
+            "type": "boolean",
+            "title": "Samemythology",
+            "default": false
+          },
+          "score": {
+            "type": "number",
+            "title": "Score",
+            "default": 0.0
+          }
+        },
+        "type": "object",
+        "required": [
+          "sourceId",
+          "targetId"
+        ],
+        "title": "SuggestionDTO"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "WhatIfRequest": {
+        "properties": {
+          "aId": {
+            "type": "string",
+            "title": "Aid"
+          },
+          "bId": {
+            "type": "string",
+            "title": "Bid"
+          }
+        },
+        "type": "object",
+        "required": [
+          "aId",
+          "bId"
+        ],
+        "title": "WhatIfRequest"
+      },
+      "WhatIfResponse": {
+        "properties": {
+          "narrative": {
+            "type": "string",
+            "title": "Narrative"
+          },
+          "engine": {
+            "type": "string",
+            "title": "Engine",
+            "default": "graph"
+          }
+        },
+        "type": "object",
+        "required": [
+          "narrative"
+        ],
+        "title": "WhatIfResponse"
+      }
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "name": "acg-theogony",
+  "version": "2.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w apps/web",
+    "build": "npm run build -w apps/web",
+    "lint": "npm run lint -w apps/web",
+    "gen:openapi": "uv run python -m theogony.pipelines.export_openapi",
+    "gen:types": "openapi-typescript data/openapi.json -o packages/shared/src/api.d.ts",
+    "gen": "npm run gen:openapi && npm run gen:types",
+    "api": "uv run uvicorn theogony.api.main:app --reload --port 8000",
+    "db:build": "uv run python -m theogony.pipelines.build_db",
+    "scrape": "uv run python -m theogony.pipelines.scrape_mooncell",
+    "enrich": "uv run python -m theogony.pipelines.enrich_llm",
+    "mine": "uv run python -m theogony.pipelines.mine_relations",
+    "research": "uv run python -m theogony.pipelines.luna_research",
+    "test:py": "uv run pytest"
+  },
+  "devDependencies": {
+    "openapi-typescript": "^7.5.0"
+  }
+}
