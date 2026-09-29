@@ -1,17 +1,21 @@
-# 部署方式与其他服务一致：~/services/acg-theogony/ 下 docker compose up -d --build
-# 端口续接本机 5811x 序列：web=58115, api=58116
+# 单容器部署（host 网络，对外仅 58115）：
+#   cd ~/services/acg-theogony && docker compose up -d --build
+# FastAPI 与 Next 同容器运行，API 只绑 127.0.0.1:8000（容器回环），无独立容器/端口。
 services:
-  api:
+  web:
     build:
       context: .
-      dockerfile: Dockerfile.api
-    image: acg-theogony:api
-    container_name: acg-theogony-api
+      dockerfile: Dockerfile.web
+      args:
+        - API_ORIGIN=http://127.0.0.1:18000
+    image: acg-theogony:web
+    container_name: acg-theogony-web
     restart: unless-stopped
-    ports:
-      - "${API_PORT:-58116}:8000"
+    network_mode: host
     environment:
       - TZ=Asia/Shanghai
+      - WEB_PORT=${WEB_PORT:-58115}
+      - API_INTERNAL_PORT=18000
       - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY:-}
       - DEEPSEEK_API_BASE=${DEEPSEEK_API_BASE:-https://api.deepseek.com}
       - LUNA_API_KEY=${LUNA_API_KEY:-}
@@ -23,28 +27,10 @@ services:
       - EMBEDDINGS_MODEL=${EMBEDDINGS_MODEL:-}
       - REVIEW_TOKEN=${REVIEW_TOKEN:-}
     volumes:
-      - ./data:/app/data
+      - ./data:/repo/data
     healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8000/api/stats', timeout=5)"]
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://127.0.0.1:58115/api/stats', timeout=5)"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 20s
-
-  web:
-    build:
-      context: .
-      dockerfile: Dockerfile.web
-      args:
-        - API_ORIGIN=${WEB_API_ORIGIN:-http://api:8000}
-    image: acg-theogony:web
-    container_name: acg-theogony-web
-    restart: unless-stopped
-    ports:
-      - "${WEB_PORT:-58115}:3000"
-    environment:
-      - TZ=Asia/Shanghai
-      - API_ORIGIN=http://api:8000
-    depends_on:
-      api:
-        condition: service_healthy
+      start_period: 40s

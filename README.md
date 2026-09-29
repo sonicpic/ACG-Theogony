@@ -91,7 +91,7 @@ npm run lint        # eslint（web）
 uv run ruff check . # python lint
 ```
 
-Docker：`docker compose up --build`（api :8000 / web :3000）。
+Docker（单容器全栈，host 网络对外仅一个端口）：`docker compose up -d --build` → `http://localhost:58115`（FastAPI 与 Next 同容器，API 仅绑内部回环）。
 
 ## 数据与版权
 
