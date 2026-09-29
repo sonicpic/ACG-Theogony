@@ -8,6 +8,7 @@ COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-install-project --no-dev
 
 # 项目层
+COPY README.md pyproject.toml uv.lock ./
 COPY theogony ./theogony
 COPY data ./data
 RUN uv sync --frozen --no-dev

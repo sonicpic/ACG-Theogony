@@ -13,6 +13,9 @@ COPY . .
 # 构建期类型从已提交的 data/openapi.json 生成（无需后端在线）
 RUN npm run gen:types
 ENV NEXT_TELEMETRY_DISABLED=1
+# rewrites 会在 next build 时固化进路由清单，因此 API 地址必须作为构建参数传入
+ARG API_ORIGIN=http://api:8000
+ENV API_ORIGIN=${API_ORIGIN}
 RUN npm run build -w apps/web
 
 FROM node:22-alpine AS runner
