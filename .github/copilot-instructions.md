@@ -1,58 +1,29 @@
-# Copilot Instructions — Theogony-Graph
+# Copilot Instructions — ACG-Theogony v2
 
-## 项目结构与数据流
-- 后端抓取与清洗在 [backend/](backend/)：先运行爬虫生成原始列表，再构建图谱 JSON。
-- 前端可视化在 [frontend/](frontend/)：读取 [frontend/public/graph_data.json](frontend/public/graph_data.json) 渲染图谱。
-- 统一数据结构：后端 [backend/schema.py](backend/schema.py) 与前端 [frontend/src/types.ts](frontend/src/types.ts) 必须同步更新。
-- 角色关系数据在 [backend/data/character_relationships.json](backend/data/character_relationships.json)，手动维护已知关系。
+## 项目结构（monorepo）
 
-## 核心脚本与职责
-- [backend/scraper_mooncell.py](backend/scraper_mooncell.py)：爬取 Mooncell 英灵图鉴，输出原始数据到 [backend/data/raw_characters.json](backend/data/raw_characters.json)。
-- [backend/enrich_with_llm.py](backend/enrich_with_llm.py)：使用 DeepSeek API 补充信息和提取关系，输出到 [backend/data/enriched_characters.json](backend/data/enriched_characters.json)。
-- [backend/build_graph.py](backend/build_graph.py)：将原始列表 + 关系数据转换为图谱结构，输出到 [frontend/public/graph_data.json](frontend/public/graph_data.json)。
+- `theogony/core/`：领域核心（受控词表 `enums.py`、ORM、种子入库、FTS5 检索、图算法、LLM 提供方抽象、NLQ 规则解析）
+- `theogony/pipelines/`：数据管道（异步爬虫、LLM 增强、关系挖掘、联网研究、数据导出）
+- `theogony/api/`：FastAPI 应用与路由（`main.py` 装配，`routers/` 分模块）
+- `apps/web/`：Next.js 16 + React 19 前端（Sigma.js WebGL 图谱、React Flow 星系图/家谱树）
+- `packages/shared/`：由 OpenAPI 自动生成的前端类型（`npm run gen`，**禁止手改**）
+- `data/raw/`：git 跟踪的源数据；`data/*.db` 为生成产物（已 ignore）
 
-## 数据结构约定（必须遵守）
-- `Node`：`id`, `name`, `type`, `source`, `description`（可选 `image_url`, `metadata`）。
-- `Link`：`source`, `target`, `relationship`, `label`。
-- `type` 仅允许 `Character` 或 `Myth`。
-- `relationship` 类型分三类：
-  - 神话关系：`BELONGS_TO`, `PROTOTYPE_IS`, `GENDER_SWAP`, `DERIVED_FROM`, `COMPOSITE_OF`
-  - 家族关系：`PARENT_OF`, `CHILD_OF`, `SIBLING_OF`, `SPOUSE_OF`, `LOVER_OF`
-  - 社会关系：`MASTER_OF`, `SERVANT_OF`, `ALLY_OF`, `ENEMY_OF`, `FOUGHT_WITH`, `MENTOR_OF`, `STUDENT_OF`
-- 角色节点 `id` 形如 `char_<编号>`；神话节点 `id` 形如 `myth_<slug>`。
+## 关键约定（必须遵守）
 
-## 角色关系可视化
-- 关系数据在 [backend/data/character_relationships.json](backend/data/character_relationships.json)，格式：
-  ```json
-  {
-    "source_name": "角色名（需匹配 name 或 prototype）",
-    "target_name": "目标角色名",
-    "relationship": "关系类型（RelationshipType 枚举值）",
-    "bidirectional": "是否双向关系（如 SIBLING_OF, ALLY_OF）"
-  }
-  ```
-- 构建脚本会自动匹配角色名并创建连线，跳过未找到的关系。
-- 前端通过不同颜色和方向箭头显示不同关系类型，支持按类别筛选。
+1. **单一 schema 源**：后端改 `theogony/core/models.py` / `enums.py` 后必须 `npm run gen` 重新生成 OpenAPI 与 TS 类型并提交，CI 会校验漂移
+2. **关系存储**：只用规范方向（逆关系 `CHILD_OF/SERVANT_OF/STUDENT_OF` 入库时翻转归一化，见 `seeding.normalize_relationship`）；LLM/众包关系一律 `status=pending`，经 `/api/review/*` 批准后才进入图谱
+3. **名称解析**：同名角色（如各版本阿尔托莉雅）优先编号最小的本家；实体链接需做变体归并（见 `api/routers/ai.py`）
+4. **LLM 调用**：统一走 `core/llm.py`；Luna 提供方并发硬上限 2（中转站风控），思考强度 bulk 用 medium、`--effort max` 仅用于单批深挖
+5. **管道输出**：批量任务必须 `python -u` 运行且逐批增量落库（中断可续跑）；写库后需 `rebuild_fts` 与 `GraphService.refresh()`
+6. **词表同步**：`theogony/core/enums.py`（RELATION_META/MYTHOLOGY_COLORS）与 `apps/web/src/lib/constants.ts` 保持一致；新增关系类型两边都要改
 
-## 前端可视化关键点
-- 图谱组件在 [frontend/src/components/TheogonyGraph.tsx](frontend/src/components/TheogonyGraph.tsx)，使用 `react-force-graph-2d`。
-- 页面入口在 [frontend/src/app/page.tsx](frontend/src/app/page.tsx)，通过 `next/dynamic` 禁用 SSR。
-- 关系类型配置在 `relationshipConfig`，包含颜色、显示名称和类别分组。
-- 方向性关系（父子、师徒等）显示方向箭头粒子。
-- 交互逻辑：点击节点高亮其相邻节点与连线，支持按关系类型筛选（见 `onNodeClick` 实现）。
+## 常用命令
 
-## 运行与工作流
-- Python 依赖见 [backend/requirements.txt](backend/requirements.txt)。
-- 典型流程：
-  1) 运行爬虫生成原始数据：`python -m backend.scraper_mooncell`
-  2) 【可选】使用 LLM 增强数据：`python -m backend.enrich_with_llm --limit 10`（需设置 `DEEPSEEK_API_KEY`）
-  3) 编辑 [backend/data/character_relationships.json](backend/data/character_relationships.json) 手动添加/审核关系
-  4) 构建图谱：`python -m backend.build_graph`
-  5) 前端开发：在 [frontend/](frontend/) 执行 `npm run dev`
-
-## 项目约定
-- 不要直接改动 [frontend/public/graph_data.json](frontend/public/graph_data.json)，应通过构建脚本生成。
-- 增加字段时必须同时更新 `backend/schema.py` 与 `frontend/src/types.ts`。
-- 新增关系类型必须同时在后端 `RelationshipType` 枚举和前端 `relationshipConfig` 中定义。
-- 爬虫访问 Mooncell 时需保留随机 `User-Agent` 与延时策略（见 `scraper_mooncell.py`）。
-- 关系数据手动维护，确保 `source_name` 和 `target_name` 与原始数据中的 `name` 或 `prototype` 字段匹配。
+```bash
+uv sync --group dev && npm install && npm run db:build   # 初始化
+npm run api          # FastAPI :8000（/docs 有全部端点）
+npm run dev          # Next.js :3000
+uv run pytest        # 测试；uv run ruff check .  # lint
+npm run enrich / mine / research / export-data    # 数据管道
+```
