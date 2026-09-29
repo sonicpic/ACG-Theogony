@@ -110,6 +110,30 @@ def review_pending(
         session.close()
 
 
+@router.post("/review/batch")
+def review_batch(
+    decisions: dict[str, str],
+    _: None = Depends(require_review_token),
+):
+    """批量审核：{"<id>": "approve"|"reject", ...}（reject 可撤销已批准项）"""
+    approved, rejected, missing = 0, 0, 0
+    with session_scope() as session:
+        for rid_str, action in decisions.items():
+            rel = session.get(Relationship, int(rid_str))
+            if rel is None or (action == "approve" and rel.status != ReviewStatus.PENDING.value):
+                missing += 1
+                continue
+            if action == "approve":
+                rel.status = ReviewStatus.APPROVED.value
+                rel.confidence = "verified"
+                approved += 1
+            elif action == "reject":
+                rel.status = ReviewStatus.REJECTED.value
+                rejected += 1
+    GraphService.instance().refresh()
+    return {"approved": approved, "rejected": rejected, "skipped": missing}
+
+
 @router.post("/review/{relationship_id}")
 def review_decide(
     relationship_id: int,
@@ -133,27 +157,3 @@ def review_decide(
         result = rel_dto(rel, _name_map(session))
     GraphService.instance().refresh()
     return result
-
-
-@router.post("/review/batch")
-def review_batch(
-    decisions: dict[str, str],
-    _: None = Depends(require_review_token),
-):
-    """批量审核：{"<id>": "approve"|"reject", ...}（reject 可撤销已批准项）"""
-    approved, rejected, missing = 0, 0, 0
-    with session_scope() as session:
-        for rid_str, action in decisions.items():
-            rel = session.get(Relationship, int(rid_str))
-            if rel is None or (action == "approve" and rel.status != ReviewStatus.PENDING.value):
-                missing += 1
-                continue
-            if action == "approve":
-                rel.status = ReviewStatus.APPROVED.value
-                rel.confidence = "verified"
-                approved += 1
-            elif action == "reject":
-                rel.status = ReviewStatus.REJECTED.value
-                rejected += 1
-    GraphService.instance().refresh()
-    return {"approved": approved, "rejected": rejected, "skipped": missing}

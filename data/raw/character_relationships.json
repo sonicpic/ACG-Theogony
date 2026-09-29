@@ -90,6 +90,2526 @@
       "evidence": "",
       "origin": "manual",
       "status": "approved"
+    },
+    {
+      "source_name": "盖乌斯·尤利乌斯·恺撒",
+      "target_name": "克娄巴特拉",
+      "relationship": "LOVER_OF",
+      "confidence": "verified",
+      "evidence": "恺撒与克娄巴特拉曾为情人",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "亚历山大",
+      "target_name": "大流士三世",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "亚历山大多次与大流士交战",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "布狄卡",
+      "target_name": "尼禄·克劳狄乌斯",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "布狄卡起兵反抗尼禄统治",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "伊斯坎达尔",
+      "target_name": "亚历山大",
+      "relationship": "PROTOTYPE_IS",
+      "confidence": "verified",
+      "evidence": "伊斯坎达尔即成年亚历山大",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "Archer Inferno",
+      "target_name": "巴御前",
+      "relationship": "PROTOTYPE_IS",
+      "confidence": "verified",
+      "evidence": "Archer Inferno真身为巴御前",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "卡米拉",
+      "target_name": "伊丽莎白·巴托里",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "卡米拉是巴托里的成人形态",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "伊丽莎白·巴托里〔万圣节〕",
+      "target_name": "伊丽莎白·巴托里",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "FGO万圣节变体",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "伊丽莎白·巴托里〔勇者〕",
+      "target_name": "伊丽莎白·巴托里",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "FGO勇者变体",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "伊丽莎白·巴托里〔灰姑娘〕",
+      "target_name": "伊丽莎白·巴托里",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "FGO灰姑娘变体",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "尼禄·克劳狄乌斯〔新娘〕",
+      "target_name": "尼禄·克劳狄乌斯",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "FGO新娘灵基变体",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "冲田总司〔Alter〕",
+      "target_name": "冲田总司",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "FGO Alter灵基变体",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "弗拉德三世〔EXTRA〕",
+      "target_name": "弗拉德三世",
+      "relationship": "DERIVED_FROM",
+      "confidence": "medium",
+      "evidence": "同一人物的EXTRA版本",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "平景清",
+      "target_name": "牛若丸",
+      "relationship": "COMPOSITE_OF",
+      "confidence": "verified",
+      "evidence": "景清灵基融合牛若丸要素",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "平景清",
+      "target_name": "牛若丸",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "平家景清传说中敌视义经",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "宫本武藏",
+      "target_name": "宫本伊织",
+      "relationship": "MENTOR_OF",
+      "confidence": "verified",
+      "evidence": "伊织是武藏弟子",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "冲田总司",
+      "target_name": "土方岁三",
+      "relationship": "FOUGHT_WITH",
+      "confidence": "verified",
+      "evidence": "同为新选组成员并肩作战",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "冲田总司",
+      "target_name": "山南敬助",
+      "relationship": "FOUGHT_WITH",
+      "confidence": "verified",
+      "evidence": "同属新选组并肩作战",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "冲田总司",
+      "target_name": "原田左之助",
+      "relationship": "FOUGHT_WITH",
+      "confidence": "verified",
+      "evidence": "同属新选组并肩作战",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "土方岁三",
+      "target_name": "山南敬助",
+      "relationship": "FOUGHT_WITH",
+      "confidence": "verified",
+      "evidence": "同属新选组并肩作战",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "土方岁三",
+      "target_name": "原田左之助",
+      "relationship": "FOUGHT_WITH",
+      "confidence": "verified",
+      "evidence": "同属新选组并肩作战",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "山南敬助",
+      "target_name": "原田左之助",
+      "relationship": "FOUGHT_WITH",
+      "confidence": "verified",
+      "evidence": "同属新选组并肩作战",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "诸葛孔明〔埃尔梅罗Ⅱ世〕",
+      "target_name": "司马懿〔莱妮丝〕",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "三国时期长期对手",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "荆轲",
+      "target_name": "始皇帝",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "曾行刺秦始皇",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "弗拉德三世〔EXTRA〕",
+      "target_name": "弗拉德三世",
+      "relationship": "PROTOTYPE_IS",
+      "confidence": "verified",
+      "evidence": "同一历史人物的不同召唤",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "坂本龙马",
+      "target_name": "冈田以藏",
+      "relationship": "ALLY_OF",
+      "confidence": "medium",
+      "evidence": "同属土佐勤王党",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "南丁格尔〔圣诞〕",
+      "target_name": "南丁格尔",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "南丁格尔的圣诞变体",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "大流士三世",
+      "target_name": "伊斯坎达尔",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "高加米拉战役交战",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "弗朗西斯·德雷克",
+      "target_name": "安妮·伯妮＆玛莉·瑞德",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "三人为海盗同伴",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "贞德",
+      "target_name": "吉尔·德·雷",
+      "relationship": "FOUGHT_WITH",
+      "confidence": "verified",
+      "evidence": "吉尔·德·雷曾随贞德作战",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "织田信长",
+      "target_name": "上杉谦信",
+      "relationship": "ENEMY_OF",
+      "confidence": "medium",
+      "evidence": "织田与上杉势力曾交战",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "尼禄·克劳狄乌斯〔新娘〕",
+      "target_name": "布狄卡",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "布狄卡起义发生于尼禄统治期",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "土方岁三",
+      "target_name": "冲田总司",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "同属新选组并共同作战",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "土方岁三",
+      "target_name": "原田左之助",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "同属新选组并共同作战",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "土方岁三",
+      "target_name": "山南敬助",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "同属新选组核心成员",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "柳生但马守宗矩",
+      "target_name": "宫本武藏",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "《英灵剑豪七番胜负》交战",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "Archer Inferno",
+      "target_name": "宫本武藏",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "《英灵剑豪七番胜负》交战",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "Assassin Paraiso",
+      "target_name": "宫本武藏",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "《英灵剑豪七番胜负》交战",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "加藤段藏",
+      "target_name": "宫本武藏",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "《英灵剑豪七番胜负》中并肩作战",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "亚历山大",
+      "target_name": "伊斯坎达尔",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "伊斯坎达尔的少年形态",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "贞德",
+      "target_name": "吉尔·德·雷",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "共同参与百年战争",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "冲田总司",
+      "target_name": "山南敬助",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "新选组队友",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "冲田总司",
+      "target_name": "原田左之助",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "新选组队友",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "项羽",
+      "target_name": "始皇帝",
+      "relationship": "ALLY_OF",
+      "confidence": "medium",
+      "evidence": "异闻带中项羽效忠始皇帝",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "长尾景虎",
+      "target_name": "上杉谦信",
+      "relationship": "PROTOTYPE_IS",
+      "confidence": "verified",
+      "evidence": "长尾景虎即上杉谦信",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "长尾景虎",
+      "target_name": "上杉谦信",
+      "relationship": "GENDER_SWAP",
+      "confidence": "verified",
+      "evidence": "女性化演绎上杉谦信",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "森长可",
+      "target_name": "织田信长",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "森长可为织田家武将",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "虞美人",
+      "target_name": "兰陵王",
+      "relationship": "MASTER_OF",
+      "confidence": "medium",
+      "evidence": "异闻带中虞美人召唤兰陵王",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "山南敬助",
+      "target_name": "原田左之助",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "同为新选组成员",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "南丁格尔〔圣诞〕",
+      "target_name": "南丁格尔",
+      "relationship": "PROTOTYPE_IS",
+      "confidence": "verified",
+      "evidence": "圣诞形态源自南丁格尔",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "陈宫",
+      "target_name": "吕布奉先",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "曾任吕布麾下谋士",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "宫本武藏",
+      "target_name": "千子村正",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "下总国异闻带并肩作战",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "虞美人",
+      "target_name": "兰陵王",
+      "relationship": "ALLY_OF",
+      "confidence": "medium",
+      "evidence": "异闻带中同阵营",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "斋藤一",
+      "target_name": "冲田总司",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "同属新选组",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "斋藤一",
+      "target_name": "土方岁三",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "同属新选组",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "斋藤一",
+      "target_name": "山南敬助",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "同属新选组",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "斋藤一",
+      "target_name": "原田左之助",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "同属新选组",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "赫费斯提翁",
+      "target_name": "亚历山大",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "亚历山大的亲密战友与部将",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "赫费斯提翁",
+      "target_name": "伊斯坎达尔",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "伊斯坎达尔的亲密战友与部将",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "赫费斯提翁",
+      "target_name": "亚历山大",
+      "relationship": "LOVER_OF",
+      "confidence": "medium",
+      "evidence": "传统与FGO均有恋人解读",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "赫费斯提翁",
+      "target_name": "伊斯坎达尔",
+      "relationship": "LOVER_OF",
+      "confidence": "medium",
+      "evidence": "传统与FGO均有恋人解读",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "不夜城的Assassin",
+      "target_name": "克娄巴特拉",
+      "relationship": "PROTOTYPE_IS",
+      "confidence": "verified",
+      "evidence": "真名为克娄巴特拉",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "徐福",
+      "target_name": "始皇帝",
+      "relationship": "ALLY_OF",
+      "confidence": "medium",
+      "evidence": "受始皇帝派遣求仙",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "武田晴信",
+      "target_name": "上杉谦信",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "川中岛合战多次交战",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "托勒密",
+      "target_name": "亚历山大",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "亚历山大麾下将领",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "托勒密",
+      "target_name": "伊斯坎达尔",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "亚历山大麾下将领",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "山南敬助",
+      "target_name": "永仓新八",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "同为新选组成员",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "永仓新八",
+      "target_name": "冲田总司",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "同为新选组成员",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "永仓新八",
+      "target_name": "原田左之助",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "同为新选组成员",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "永仓新八",
+      "target_name": "土方岁三",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "同为新选组成员",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "BB",
+      "target_name": "Meltryllis",
+      "relationship": "PARENT_OF",
+      "confidence": "verified",
+      "evidence": "BB创造的樱系五姐妹之一",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "BB",
+      "target_name": "Passionlip",
+      "relationship": "PARENT_OF",
+      "confidence": "verified",
+      "evidence": "BB创造的樱系五姐妹之一",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "BB",
+      "target_name": "Kingprotea",
+      "relationship": "PARENT_OF",
+      "confidence": "verified",
+      "evidence": "BB创造的樱系五姐妹之一",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "BB",
+      "target_name": "Kazuradrop",
+      "relationship": "PARENT_OF",
+      "confidence": "verified",
+      "evidence": "BB创造的樱系五姐妹之一",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "Meltryllis",
+      "target_name": "Passionlip",
+      "relationship": "SIBLING_OF",
+      "confidence": "verified",
+      "evidence": "同属樱系五姐妹",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "Meltryllis",
+      "target_name": "Kingprotea",
+      "relationship": "SIBLING_OF",
+      "confidence": "verified",
+      "evidence": "同属樱系五姐妹",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "Meltryllis",
+      "target_name": "Kazuradrop",
+      "relationship": "SIBLING_OF",
+      "confidence": "verified",
+      "evidence": "同属樱系五姐妹",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "Passionlip",
+      "target_name": "Kingprotea",
+      "relationship": "SIBLING_OF",
+      "confidence": "verified",
+      "evidence": "同属樱系五姐妹",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "Passionlip",
+      "target_name": "Kazuradrop",
+      "relationship": "SIBLING_OF",
+      "confidence": "verified",
+      "evidence": "同属樱系五姐妹",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "Kingprotea",
+      "target_name": "Kazuradrop",
+      "relationship": "SIBLING_OF",
+      "confidence": "verified",
+      "evidence": "同属樱系五姐妹",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "BB迪拜",
+      "target_name": "BB",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "未来时代的BB变体",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "卫宫〔Alter〕",
+      "target_name": "卫宫",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "卫宫的异闻带变体",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "新宿的Archer",
+      "target_name": "詹姆斯·莫里亚蒂",
+      "relationship": "PROTOTYPE_IS",
+      "confidence": "verified",
+      "evidence": "真名即为莫里亚蒂",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "夏洛克·福尔摩斯",
+      "target_name": "詹姆斯·莫里亚蒂",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "福尔摩斯与莫里亚蒂宿敌",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "两仪式",
+      "target_name": "浅上藤乃",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "空之境界中曾直接交战",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "谜之女主角X",
+      "target_name": "谜之女主角X〔Alter〕",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "Saber Wars中的宿敌",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "超级班扬",
+      "target_name": "保罗·班扬",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "超级班扬源自保罗班扬",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "爱丽丝菲尔〔天之衣〕",
+      "target_name": "伊莉雅丝菲尔·冯·爱因兹贝伦",
+      "relationship": "PARENT_OF",
+      "confidence": "verified",
+      "evidence": "爱丽丝菲尔是伊莉雅母亲",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "卫宫〔Assassin〕",
+      "target_name": "爱丽丝菲尔〔天之衣〕",
+      "relationship": "SPOUSE_OF",
+      "confidence": "verified",
+      "evidence": "切嗣与爱丽丝菲尔为夫妻",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "卫宫〔Assassin〕",
+      "target_name": "伊莉雅丝菲尔·冯·爱因兹贝伦",
+      "relationship": "PARENT_OF",
+      "confidence": "verified",
+      "evidence": "切嗣是伊莉雅的父亲",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "伊莉雅丝菲尔·冯·爱因兹贝伦",
+      "target_name": "克洛伊·冯·爱因兹贝伦",
+      "relationship": "SIBLING_OF",
+      "confidence": "verified",
+      "evidence": "克洛伊是伊莉雅的分离姊妹",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "爱丽丝菲尔〔天之衣〕",
+      "target_name": "克洛伊·冯·爱因兹贝伦",
+      "relationship": "PARENT_OF",
+      "confidence": "medium",
+      "evidence": "平行世界中为克洛伊母亲",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "苍崎青子",
+      "target_name": "久远寺有珠",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "魔法使之夜中的共同生活者",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "Archer Inferno",
+      "target_name": "巴御前",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "真名均为巴御前",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "上杉谦信",
+      "target_name": "加藤段藏",
+      "relationship": "ALLY_OF",
+      "confidence": "medium",
+      "evidence": "传说中加藤段藏曾仕于上杉",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "近藤勇",
+      "target_name": "冲田总司",
+      "relationship": "MENTOR_OF",
+      "confidence": "verified",
+      "evidence": "冲田曾在近藤门下修行",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "近藤勇",
+      "target_name": "土方岁三",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "新选组核心同僚",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "近藤勇",
+      "target_name": "藤堂平助",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "新选组同僚",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "近藤勇",
+      "target_name": "原田左之助",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "新选组同僚",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "近藤勇",
+      "target_name": "山南敬助",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "新选组核心同僚",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "土方岁三",
+      "target_name": "藤堂平助",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "新选组同僚",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "冲田总司",
+      "target_name": "藤堂平助",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "新选组同僚",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "藤堂平助",
+      "target_name": "原田左之助",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "新选组同僚",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "藤堂平助",
+      "target_name": "山南敬助",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "新选组同僚",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "伊莉雅丝菲尔·冯·爱因兹贝伦",
+      "target_name": "美游·艾德费尔特",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "魔法少女伊莉雅中的伙伴",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "克洛伊·冯·爱因兹贝伦",
+      "target_name": "美游·艾德费尔特",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "魔法少女伊莉雅中的伙伴",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "新宿的Archer",
+      "target_name": "詹姆斯·莫里亚蒂",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "新宿Archer真身为莫里亚蒂",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "新宿的Archer",
+      "target_name": "夏洛克·福尔摩斯",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "莫里亚蒂与福尔摩斯宿敌",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "两仪式",
+      "target_name": "浅上藤乃",
+      "relationship": "FOUGHT_WITH",
+      "confidence": "verified",
+      "evidence": "两人在空之境界中交战",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "Meltryllis",
+      "target_name": "BB",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "樱之梦魔Alter Ego之一",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "Passionlip",
+      "target_name": "BB",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "樱之梦魔Alter Ego之一",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "Kingprotea",
+      "target_name": "BB",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "樱之梦魔Alter Ego之一",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "Kazuradrop",
+      "target_name": "BB",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "樱之梦魔Alter Ego之一",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "尼莫〔圣诞〕",
+      "target_name": "尼莫",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "尼莫的圣诞变体",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "Phantasmoon",
+      "target_name": "Archetype：Earth",
+      "relationship": "DERIVED_FROM",
+      "confidence": "medium",
+      "evidence": "阿尔克特的魔法少女形态",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "谜之女主角X〔Alter〕",
+      "target_name": "谜之女主角X",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "X的Alter形态",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "谜之偶像X〔Alter〕",
+      "target_name": "谜之女主角X〔Alter〕",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "XAlter的偶像形态",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "谜之女主角XX",
+      "target_name": "谜之女主角X",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "X的未来形态",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "谜之女主角XX〔Alter〕",
+      "target_name": "谜之女主角XX",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "XX的Alter形态",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "BB",
+      "target_name": "谜之Alterego·Λ",
+      "relationship": "PARENT_OF",
+      "confidence": "verified",
+      "evidence": "BB创造的樱之Alterego",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "谜之Alterego·Λ",
+      "target_name": "Meltryllis",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "Λ是Melt的夏日变体",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "BB",
+      "target_name": "杀生院祈荒",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "CCC中对立的敌人",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "Meltryllis",
+      "target_name": "杀生院祈荒",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "CCC中与杀生院对战",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "Kingprotea",
+      "target_name": "杀生院祈荒",
+      "relationship": "ENEMY_OF",
+      "confidence": "medium",
+      "evidence": "CCC中遭其压制",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "谜之代行者C.I.E.L",
+      "target_name": "Archetype：Earth",
+      "relationship": "ENEMY_OF",
+      "confidence": "medium",
+      "evidence": "月姬设定中的对立关系",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "雨之魔女梣",
+      "target_name": "妖精骑士崔斯坦",
+      "relationship": "PARENT_OF",
+      "confidence": "verified",
+      "evidence": "摩根前身，收养崔斯坦",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "克洛伊·冯·爱因兹贝伦",
+      "target_name": "伊莉雅丝菲尔·冯·爱因兹贝伦",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "由伊莉雅魔力分离诞生",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "克洛伊·冯·爱因兹贝伦",
+      "target_name": "伊莉雅丝菲尔·冯·爱因兹贝伦",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "共同对抗敌人的伙伴",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "苍崎青子",
+      "target_name": "静希草十郎",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "《魔法使之夜》共同主角",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "久远寺有珠",
+      "target_name": "静希草十郎",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "共同居住并协力作战",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "岸波白野",
+      "target_name": "Passionlip",
+      "relationship": "MASTER_OF",
+      "confidence": "verified",
+      "evidence": "CCC中的御主与从者",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "岸波白野",
+      "target_name": "Meltryllis",
+      "relationship": "MASTER_OF",
+      "confidence": "verified",
+      "evidence": "CCC中的御主与从者",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "摩根",
+      "target_name": "莫德雷德",
+      "relationship": "PARENT_OF",
+      "confidence": "verified",
+      "evidence": "亚瑟王传说中摩根为其母",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "阿尔托莉雅·潘德拉贡〔Alter〕",
+      "target_name": "阿尔托莉雅·潘德拉贡",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "FGO中的黑化变体",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "阿尔托莉雅·潘德拉贡〔Lily〕",
+      "target_name": "阿尔托莉雅·潘德拉贡",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "FGO中的幼年变体",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "阿尔托莉雅·潘德拉贡〔圣诞Alter〕",
+      "target_name": "阿尔托莉雅·潘德拉贡〔Alter〕",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "FGO中的圣诞Alter变体",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "阿尔托莉雅·潘德拉贡",
+      "target_name": "亚瑟·潘德拉贡〔Prototype〕",
+      "relationship": "GENDER_SWAP",
+      "confidence": "medium",
+      "evidence": "两者分别对应男女亚瑟王",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "阿瓦隆女士",
+      "target_name": "梅林",
+      "relationship": "GENDER_SWAP",
+      "confidence": "verified",
+      "evidence": "FGO设定中的女性梅林",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "UDK－巴格斯特",
+      "target_name": "妖精骑士高文",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "巴格斯特的夏日从者形态",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "加雷斯",
+      "target_name": "高文",
+      "relationship": "SIBLING_OF",
+      "confidence": "verified",
+      "evidence": "两人为兄妹",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "梅林",
+      "target_name": "阿尔托莉雅·潘德拉贡",
+      "relationship": "MENTOR_OF",
+      "confidence": "verified",
+      "evidence": "梅林指导并辅佐亚瑟王",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "兰斯洛特",
+      "target_name": "阿尔托莉雅·潘德拉贡",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "圆桌骑士与王的同盟",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "高文",
+      "target_name": "阿尔托莉雅·潘德拉贡",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "圆桌骑士与王的同盟",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "崔斯坦",
+      "target_name": "阿尔托莉雅·潘德拉贡",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "圆桌骑士与王并肩作战",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "加雷斯",
+      "target_name": "阿尔托莉雅·潘德拉贡",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "圆桌骑士效忠亚瑟王",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "贝德维尔",
+      "target_name": "阿尔托莉雅·潘德拉贡",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "传说中始终效忠亚瑟王",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "珀西瓦尔",
+      "target_name": "阿尔托莉雅·潘德拉贡",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "圆桌骑士与王的同盟",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "莫德雷德",
+      "target_name": "阿尔托莉雅·潘德拉贡",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "叛乱并在卡姆兰决战",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "摩根",
+      "target_name": "阿尔托莉雅·潘德拉贡",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "传说与FGO中长期对立",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "兰斯洛特",
+      "target_name": "高文",
+      "relationship": "FOUGHT_WITH",
+      "confidence": "verified",
+      "evidence": "两人在传说中发生决斗",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "哈贝特洛特",
+      "target_name": "阿尔托莉雅·卡斯特",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "不列颠异闻带中的同伴",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "奥伯龙",
+      "target_name": "阿尔托莉雅·卡斯特",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "异闻带后期背叛并与其对立",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "摩根",
+      "target_name": "阿尔托莉雅·潘德拉贡",
+      "relationship": "SIBLING_OF",
+      "confidence": "verified",
+      "evidence": "两者为姐妹",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "阿尔托莉雅·卡斯特",
+      "target_name": "阿尔托莉雅·潘德拉贡",
+      "relationship": "DERIVED_FROM",
+      "confidence": "medium",
+      "evidence": "异闻带中的对应形态",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "妖精骑士兰斯洛特",
+      "target_name": "兰斯洛特",
+      "relationship": "DERIVED_FROM",
+      "confidence": "medium",
+      "evidence": "借用了兰斯洛特骑士名",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "奥伯龙",
+      "target_name": "摩根",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "不列颠异闻带中的对立者",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "阿尔托莉雅·卡斯特",
+      "target_name": "摩根",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "异闻带中反抗摩根统治",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "兰斯洛特",
+      "target_name": "高文",
+      "relationship": "ENEMY_OF",
+      "confidence": "medium",
+      "evidence": "传说中多次交战的圆桌骑士",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "梅林",
+      "target_name": "摩根",
+      "relationship": "ENEMY_OF",
+      "confidence": "medium",
+      "evidence": "传说与FGO中长期对立",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "Passionlip",
+      "target_name": "杀生院祈荒",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "SE.RA.PH中对抗杀生院",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "弗兰肯斯坦",
+      "target_name": "齐格",
+      "relationship": "ALLY_OF",
+      "confidence": "medium",
+      "evidence": "黑方阵营并肩作战",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "尤瑞艾莉",
+      "target_name": "美杜莎",
+      "relationship": "SIBLING_OF",
+      "confidence": "verified",
+      "evidence": "三位戈耳工姐妹",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "斯忒诺",
+      "target_name": "美杜莎",
+      "relationship": "SIBLING_OF",
+      "confidence": "verified",
+      "evidence": "三位戈耳工姐妹",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "斯忒诺",
+      "target_name": "尤瑞艾莉",
+      "relationship": "SIBLING_OF",
+      "confidence": "verified",
+      "evidence": "同为戈耳工姐妹",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "美狄亚〔Lily〕",
+      "target_name": "美狄亚",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "美狄亚的幼年形态",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "阿塔兰忒〔Alter〕",
+      "target_name": "阿塔兰忒",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "阿塔兰忒的Alter形态",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "戈耳工",
+      "target_name": "美杜莎",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "美杜莎的魔兽化形态",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "超人俄里翁",
+      "target_name": "俄里翁",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "俄里翁的FGO变体",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "美狄亚",
+      "target_name": "伊阿宋",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "伊阿宋背叛后反目",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "喀戎",
+      "target_name": "赫拉克勒斯",
+      "relationship": "MENTOR_OF",
+      "confidence": "verified",
+      "evidence": "喀戎曾教授赫拉克勒斯",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "喀戎",
+      "target_name": "阿喀琉斯",
+      "relationship": "MENTOR_OF",
+      "confidence": "verified",
+      "evidence": "喀戎教导阿喀琉斯",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "喀戎",
+      "target_name": "阿斯克勒庇俄斯",
+      "relationship": "MENTOR_OF",
+      "confidence": "verified",
+      "evidence": "喀戎传授其医术",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "喀戎",
+      "target_name": "伊阿宋",
+      "relationship": "MENTOR_OF",
+      "confidence": "medium",
+      "evidence": "传统中曾教导伊阿宋",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "赫克托耳",
+      "target_name": "帕里斯",
+      "relationship": "SIBLING_OF",
+      "confidence": "verified",
+      "evidence": "两人为特洛伊王子兄弟",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "赫克托耳",
+      "target_name": "阿喀琉斯",
+      "relationship": "FOUGHT_WITH",
+      "confidence": "verified",
+      "evidence": "特洛伊战争中决斗",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "忒修斯",
+      "target_name": "阿斯忒里俄斯",
+      "relationship": "FOUGHT_WITH",
+      "confidence": "verified",
+      "evidence": "忒修斯讨伐弥诺陶洛斯",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "伊阿宋",
+      "target_name": "赫拉克勒斯",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "两人共同参加阿尔戈远征",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "伊阿宋",
+      "target_name": "阿斯忒里俄斯",
+      "relationship": "ALLY_OF",
+      "confidence": "medium",
+      "evidence": "同为阿尔戈英雄",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "伊阿宋",
+      "target_name": "阿塔兰忒",
+      "relationship": "ALLY_OF",
+      "confidence": "medium",
+      "evidence": "传统中同属阿尔戈英雄",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "赫拉克勒斯",
+      "target_name": "阿斯忒里俄斯",
+      "relationship": "ALLY_OF",
+      "confidence": "medium",
+      "evidence": "共同参与阿尔戈远征",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "俄刻阿诺斯的Caster",
+      "target_name": "美狄亚〔Lily〕",
+      "relationship": "PROTOTYPE_IS",
+      "confidence": "verified",
+      "evidence": "俄刻阿诺斯Caster即美狄亚Lily",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "伊阿宋",
+      "target_name": "美狄亚",
+      "relationship": "LOVER_OF",
+      "confidence": "verified",
+      "evidence": "伊阿宋与美狄亚相恋",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "伊阿宋",
+      "target_name": "狄俄斯库里",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "共同参加阿尔戈远征",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "阿喀琉斯",
+      "target_name": "黄金国的Berserker",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "阿喀琉斯曾与彭忒西勒亚交战",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "阿喀琉斯",
+      "target_name": "赫克托耳",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "二人在特洛伊战争决斗",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "阿喀琉斯",
+      "target_name": "帕里斯",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "帕里斯射杀阿喀琉斯",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "阿喀琉斯",
+      "target_name": "奥德修斯",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "二人并肩参加特洛伊战争",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "忒修斯",
+      "target_name": "阿斯忒里俄斯",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "忒修斯击败米诺陶洛斯",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "狄俄斯库里",
+      "target_name": "赫拉克勒斯",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "共同参加阿耳戈远征",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "狄俄斯库里",
+      "target_name": "阿塔兰忒",
+      "relationship": "ALLY_OF",
+      "confidence": "medium",
+      "evidence": "同为阿耳戈英雄",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "狄俄斯库里",
+      "target_name": "忒修斯",
+      "relationship": "ENEMY_OF",
+      "confidence": "medium",
+      "evidence": "曾攻打雅典夺回海伦",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "忒修斯",
+      "target_name": "美狄亚",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "美狄亚曾欲毒杀忒修斯",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "玉藻猫",
+      "target_name": "玉藻前",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "玉藻猫为玉藻前的分灵",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "酒吞童子",
+      "target_name": "伊吹童子",
+      "relationship": "DERIVED_FROM",
+      "confidence": "medium",
+      "evidence": "酒吞童子与伊吹山神系传承相关",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "茨木童子",
+      "target_name": "酒吞童子",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "茨木童子是酒吞童子的同伴",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "源赖光",
+      "target_name": "坂田金时",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "金时为赖光四天王之一",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "源赖光",
+      "target_name": "渡边纲",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "渡边纲是赖光四天王之一",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "源赖光",
+      "target_name": "茨木童子",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "茨木童子与赖光阵营为敌",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "坂田金时",
+      "target_name": "酒吞童子",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "金时参与讨伐酒吞童子",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "渡边纲",
+      "target_name": "茨木童子",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "渡边纲曾斩断茨木手臂",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "牛若丸",
+      "target_name": "武藏坊弁庆",
+      "relationship": "MASTER_OF",
+      "confidence": "verified",
+      "evidence": "弁庆追随并侍奉牛若丸",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "鬼一法眼",
+      "target_name": "牛若丸",
+      "relationship": "MENTOR_OF",
+      "confidence": "verified",
+      "evidence": "鬼一法眼传授牛若丸兵法",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "珀西瓦尔",
+      "target_name": "兰斯洛特",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "圆桌骑士同僚",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "珀西瓦尔",
+      "target_name": "高文",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "圆桌骑士同僚",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "梅林",
+      "target_name": "BeastⅣ",
+      "relationship": "MASTER_OF",
+      "confidence": "verified",
+      "evidence": "BeastⅣ是梅林使魔",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "妖精骑士高文",
+      "target_name": "高文",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "继承高文骑士名号",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "莫德雷德",
+      "target_name": "加雷斯",
+      "relationship": "SIBLING_OF",
+      "confidence": "verified",
+      "evidence": "同为摩根子女",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "莫德雷德",
+      "target_name": "高文",
+      "relationship": "SIBLING_OF",
+      "confidence": "verified",
+      "evidence": "同为亚瑟王传说兄弟",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "源赖光／丑御前",
+      "target_name": "源赖光",
+      "relationship": "COMPOSITE_OF",
+      "confidence": "verified",
+      "evidence": "融合赖光与丑御前形象",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "源赖光／丑御前",
+      "target_name": "源赖光",
+      "relationship": "GENDER_SWAP",
+      "confidence": "medium",
+      "evidence": "FGO赖光以女性形象登场",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "铃鹿御前〔暑假〕",
+      "target_name": "铃鹿御前",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "铃鹿御前的泳装变体",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "源赖光",
+      "target_name": "坂田金时",
+      "relationship": "MASTER_OF",
+      "confidence": "medium",
+      "evidence": "金太郎为赖光麾下四天王",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "源赖光／丑御前",
+      "target_name": "酒吞童子",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "FGO中与酒吞对立",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "源赖光／丑御前",
+      "target_name": "茨木童子",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "FGO中与茨木敌对",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "渡边纲",
+      "target_name": "酒吞童子",
+      "relationship": "ENEMY_OF",
+      "confidence": "medium",
+      "evidence": "渡边纲参与讨伐酒吞童子",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "牛若丸",
+      "target_name": "武藏坊弁庆",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "弁庆成为牛若丸的麾下武者",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "伊吹童子",
+      "target_name": "酒吞童子",
+      "relationship": "PARENT_OF",
+      "confidence": "medium",
+      "evidence": "FGO设定中酒吞为其分灵",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "怖军",
+      "target_name": "难敌",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "俱为俱卢之战敌对方",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "怖军",
+      "target_name": "难敌",
+      "relationship": "FOUGHT_WITH",
+      "confidence": "verified",
+      "evidence": "终局进行铁棒决斗",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "怖军",
+      "target_name": "阿周那",
+      "relationship": "SIBLING_OF",
+      "confidence": "verified",
+      "evidence": "同为般度五子",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "因陀罗",
+      "target_name": "弗栗多",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "因陀罗与弗栗多为宿敌",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "因陀罗",
+      "target_name": "弗栗多",
+      "relationship": "FOUGHT_WITH",
+      "confidence": "verified",
+      "evidence": "因陀罗击杀弗栗多",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "因陀罗",
+      "target_name": "阿周那",
+      "relationship": "PARENT_OF",
+      "confidence": "verified",
+      "evidence": "因陀罗是阿周那生父",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "帕尔瓦蒂",
+      "target_name": "伟大的石像神",
+      "relationship": "PARENT_OF",
+      "confidence": "verified",
+      "evidence": "帕尔瓦蒂是伽内什之母",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "杜尔伽",
+      "target_name": "帕尔瓦蒂",
+      "relationship": "DERIVED_FROM",
+      "confidence": "medium",
+      "evidence": "杜尔伽常被视为帕尔瓦蒂化身",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "BeastⅢ／L",
+      "target_name": "迦摩",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "Beast形态源自迦摩",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "迦尔纳",
+      "target_name": "难敌",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "难敌封迦尔纳为王并结盟",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "迦尔纳",
+      "target_name": "阿周那",
+      "relationship": "FOUGHT_WITH",
+      "confidence": "verified",
+      "evidence": "两人在战场决战",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "阿周那",
+      "target_name": "难敌",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "般度族与俱卢族敌对",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "马嘶",
+      "target_name": "阿周那",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "马嘶与阿周那交战",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "马嘶",
+      "target_name": "难敌",
+      "relationship": "ALLY_OF",
+      "confidence": "medium",
+      "evidence": "马嘶效忠俱卢阵营",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "阿周那〔Alter〕",
+      "target_name": "阿周那",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "FGO中的阿周那异闻带形态",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "迦尔纳〔圣诞〕",
+      "target_name": "迦尔纳",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "迦尔纳的FGO圣诞变体",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "BeastⅢ／R",
+      "target_name": "BeastⅢ／L",
+      "relationship": "ENEMY_OF",
+      "confidence": "medium",
+      "evidence": "两者是BeastⅢ对立两侧",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "阿周那〔Alter〕",
+      "target_name": "迦尔纳",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "FGO第四异闻带中交战",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "阿周那〔Alter〕",
+      "target_name": "因陀罗",
+      "relationship": "COMPOSITE_OF",
+      "confidence": "medium",
+      "evidence": "吸收诸神力量构成异闻带神体",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "斯卡哈",
+      "target_name": "库·丘林〔Prototype〕",
+      "relationship": "MENTOR_OF",
+      "confidence": "medium",
+      "evidence": "原型库·丘林同样受斯卡哈指导",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "女王梅芙",
+      "target_name": "库·丘林",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "双方在阿尔斯特传说中交战",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "女王梅芙",
+      "target_name": "弗格斯·马克·罗伊",
+      "relationship": "LOVER_OF",
+      "confidence": "verified",
+      "evidence": "弗格斯流亡后成为梅芙情人",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "女王梅芙",
+      "target_name": "弗格斯·马克·罗伊",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "弗格斯曾与梅芙联合进攻阿尔斯特",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "库·丘林〔Prototype〕",
+      "target_name": "库·丘林",
+      "relationship": "PROTOTYPE_IS",
+      "confidence": "verified",
+      "evidence": "FGO原型版本对应库·丘林",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "马纳南·麦克·利尔〔巴泽特〕",
+      "target_name": "诺克娜蕾·雅兰杜",
+      "relationship": "PARENT_OF",
+      "confidence": "medium",
+      "evidence": "FGO中为诺克娜蕾之父",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "库·丘林",
+      "target_name": "瑟坦特",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "瑟坦特是库·丘林幼名",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "库·丘林〔Alter〕",
+      "target_name": "库·丘林",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "FGO中的库·丘林Alter形态",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "斯卡哈",
+      "target_name": "瑟坦特",
+      "relationship": "MENTOR_OF",
+      "confidence": "verified",
+      "evidence": "斯卡哈曾训练瑟坦特",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "女王梅芙",
+      "target_name": "瑟坦特",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "阿尔斯特传说中的死敌",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "诺克娜蕾·雅兰杜",
+      "target_name": "女王梅芙",
+      "relationship": "DERIVED_FROM",
+      "confidence": "medium",
+      "evidence": "异闻带妖精版梅芙",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "幼体／提亚马特",
+      "target_name": "提亚马特",
+      "relationship": "PROTOTYPE_IS",
+      "confidence": "verified",
+      "evidence": "提亚马特的幼体形态",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "伊什塔尔",
+      "target_name": "吉尔伽美什",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "拒婚后引发天之公牛事件",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "幼吉尔",
+      "target_name": "吉尔伽美什",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "吉尔伽美什的幼年形态",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "幼体／提亚马特",
+      "target_name": "提亚马特",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "提亚马特的幼体形态",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "太空伊什塔尔",
+      "target_name": "伊什塔尔",
+      "relationship": "DERIVED_FROM",
+      "confidence": "medium",
+      "evidence": "伊什塔尔的宇宙变体",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "提亚马特",
+      "target_name": "吉尔伽美什",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "FGO第七特异点共同交战",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "吉尔伽美什",
+      "target_name": "埃列什基伽勒",
+      "relationship": "ALLY_OF",
+      "confidence": "medium",
+      "evidence": "FGO中并肩对抗兽灾",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "吉尔伽美什",
+      "target_name": "伊什塔尔",
+      "relationship": "ALLY_OF",
+      "confidence": "medium",
+      "evidence": "FGO中作为盟友作战",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "大卫",
+      "target_name": "所罗门",
+      "relationship": "PARENT_OF",
+      "confidence": "verified",
+      "evidence": "大卫是所罗门之父",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "盖提亚",
+      "target_name": "所罗门",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "盖提亚源自所罗门的魔术系统",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "所罗门",
+      "target_name": "米德拉什的Caster",
+      "relationship": "LOVER_OF",
+      "confidence": "medium",
+      "evidence": "传说示巴女王与所罗门相恋",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "太公望",
+      "target_name": "哪吒",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "《封神演义》中同属西周阵营",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "太公望",
+      "target_name": "黄飞虎",
+      "relationship": "ALLY_OF",
+      "confidence": "verified",
+      "evidence": "封神故事中共同辅佐周军",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "哪吒",
+      "target_name": "黄飞虎",
+      "relationship": "ALLY_OF",
+      "confidence": "medium",
+      "evidence": "《封神演义》中同为周军将领",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "新宿的Assassin",
+      "target_name": "呼延灼",
+      "relationship": "ALLY_OF",
+      "confidence": "medium",
+      "evidence": "同为梁山好汉并参与征战",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "太岁星君",
+      "target_name": "太公望",
+      "relationship": "ENEMY_OF",
+      "confidence": "medium",
+      "evidence": "太岁星君对应殷郊，曾与姜子牙交战",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "太岁星君",
+      "target_name": "哪吒",
+      "relationship": "ENEMY_OF",
+      "confidence": "medium",
+      "evidence": "殷郊与哪吒分属商周敌对阵营",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "布伦希尔德",
+      "target_name": "齐格鲁德",
+      "relationship": "LOVER_OF",
+      "confidence": "verified",
+      "evidence": "北欧传说中的恋人",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "克里姆希尔德",
+      "target_name": "齐格飞",
+      "relationship": "SPOUSE_OF",
+      "confidence": "verified",
+      "evidence": "《尼伯龙根之歌》夫妻",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "布伦希尔德",
+      "target_name": "瓦尔基里",
+      "relationship": "BELONGS_TO",
+      "confidence": "verified",
+      "evidence": "神话中属于女武神",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "斯露德",
+      "target_name": "瓦尔基里",
+      "relationship": "BELONGS_TO",
+      "confidence": "verified",
+      "evidence": "FGO中的女武神",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "希露德",
+      "target_name": "瓦尔基里",
+      "relationship": "BELONGS_TO",
+      "confidence": "verified",
+      "evidence": "FGO中的女武神",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "奥特琳德",
+      "target_name": "瓦尔基里",
+      "relationship": "BELONGS_TO",
+      "confidence": "verified",
+      "evidence": "FGO中的女武神",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "瓦尔基里",
+      "target_name": "斯露德",
+      "relationship": "COMPOSITE_OF",
+      "confidence": "medium",
+      "evidence": "FGO同一从者形态",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "瓦尔基里",
+      "target_name": "希露德",
+      "relationship": "COMPOSITE_OF",
+      "confidence": "medium",
+      "evidence": "FGO同一从者形态",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "瓦尔基里",
+      "target_name": "奥特琳德",
+      "relationship": "COMPOSITE_OF",
+      "confidence": "medium",
+      "evidence": "FGO同一从者形态",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "斯露德",
+      "target_name": "希露德",
+      "relationship": "SIBLING_OF",
+      "confidence": "medium",
+      "evidence": "FGO设定为三姐妹",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "斯露德",
+      "target_name": "奥特琳德",
+      "relationship": "SIBLING_OF",
+      "confidence": "medium",
+      "evidence": "FGO设定为三姐妹",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "希露德",
+      "target_name": "奥特琳德",
+      "relationship": "SIBLING_OF",
+      "confidence": "medium",
+      "evidence": "FGO设定为三姐妹",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "布伦希尔德",
+      "target_name": "克里姆希尔德",
+      "relationship": "ENEMY_OF",
+      "confidence": "medium",
+      "evidence": "传说中因争执结仇",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "罗穆路斯·奎里努斯",
+      "target_name": "罗穆路斯",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "奎里努斯是罗穆路斯神化后的形态",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "魁札尔·科亚特尔〔桑巴／圣诞〕",
+      "target_name": "魁札尔·科亚特尔",
+      "relationship": "DERIVED_FROM",
+      "confidence": "verified",
+      "evidence": "圣诞活动中的魁札尔变体",
+      "origin": "llm",
+      "status": "approved"
+    },
+    {
+      "source_name": "魁札尔·科亚特尔",
+      "target_name": "特斯卡特利波卡",
+      "relationship": "SIBLING_OF",
+      "confidence": "medium",
+      "evidence": "阿兹特克神话中的兄弟",
+      "origin": "llm",
+      "status": "pending"
+    },
+    {
+      "source_name": "魁札尔·科亚特尔",
+      "target_name": "特斯卡特利波卡",
+      "relationship": "ENEMY_OF",
+      "confidence": "verified",
+      "evidence": "神话中长期争斗的宿敌",
+      "origin": "llm",
+      "status": "approved"
     }
   ]
 }

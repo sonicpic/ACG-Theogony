@@ -30,8 +30,17 @@ from theogony.core.search import hybrid_search
 router = APIRouter(tags=["ai"])
 
 
+_STOP_WORDS = ("是什么", "的关系", "关系", "怎么样", "如何", "介绍", "说说", "讲讲", "请问", "一下", "告诉", "谁是", "谁在", "吗", "呢", "吧", "了", "的", "和谁", "在哪")
+
+
+def _clean_token(token: str) -> str:
+    for w in _STOP_WORDS:
+        token = token.replace(w, "")
+    return token.strip("的?？!！。 ，,")
+
+
 def _link_entities(question: str, top_n: int = 3) -> list[Character]:
-    """实体链接：从问题中识别角色（FTS 召回 + 原文包含校验）。"""
+    """实体链接：全名直接命中 + 连词分句检索召回；同名变体取编号最小的本家。"""
     gs = GraphService.instance()
     snap = gs.snapshot
     candidates: dict[str, int] = {}
@@ -39,20 +48,31 @@ def _link_entities(question: str, top_n: int = 3) -> list[Character]:
     for name, cid in snap.name_index.items():
         if len(name) >= 2 and name in question:
             candidates[cid] = len(name) * 10
-    # 2) 检索召回补充
-    if not candidates:
-        for token in re.split(r"[，。？！,.\s、]+", question):
-            token = token.strip()
+    # 2) 按标点与常见连词分句，检索召回补充（"A和B的关系" 类问题）
+    tokens = re.split(r"[，。？！,.\s、]+|(?:和|与|跟|对|对阵|VS|vs)", question)
+    if len(tokens) > 1 or not candidates:
+        for token in tokens:
+            token = _clean_token(token)
             if len(token) < 2:
                 continue
             ranked, _ = hybrid_search(token, limit=3)
-            for cid, _score in ranked:
-                candidates.setdefault(cid, 1)
-    ranked = sorted(candidates.items(), key=lambda kv: -kv[1])[:top_n]
+            for cid, score in ranked:
+                candidates[cid] = candidates.get(cid, 0) + (2 if score > 0.3 else 1)
+    # 同名/同前缀变体归并：保留编号最小（本家）版本
+    by_name: dict[str, tuple[int, str]] = {}
+    for cid, score in candidates.items():
+        c = snap.characters.get(cid)
+        if not c:
+            continue
+        base = c.name.split("〔")[0].split("(")[0].strip()
+        prev = by_name.get(base)
+        if prev is None or cid < prev[1]:
+            by_name[base] = (score, cid)
+    ranked = sorted(by_name.values(), key=lambda kv: -kv[0])[:top_n]
     session = get_session()
     try:
         result = []
-        for cid, _ in ranked:
+        for _score, cid in ranked:
             c = session.get(Character, cid)
             if c:
                 result.append(c)
@@ -100,12 +120,20 @@ ASK_SYSTEM = """你是神话关系图谱的问答助手。基于给定的图检�
 - 中文回答，简洁（≤200字）"""
 
 
+def _interactive_provider() -> Provider | None:
+    """交互式端点用 medium 思考强度（max 在中转站上太慢，问答场景不需要）。"""
+    provider = get_provider()
+    if provider is not None and provider.name == "luna":
+        provider.extra_body = {**provider.extra_body, "reasoning_effort": "medium"}
+    return provider
+
+
 @router.post("/ai/ask", response_model=AskResponse)
 async def ask(payload: AskRequest):
     entities = _link_entities(payload.question)
     graph_answer, citations, subgraph = _graph_context_answer(payload.question, entities)
 
-    provider: Provider | None = get_provider()
+    provider: Provider | None = _interactive_provider()
     if provider is None:
         return AskResponse(answer=graph_answer, citations=citations[:30], subgraph=subgraph, engine="graph")
 
@@ -116,7 +144,7 @@ async def ask(payload: AskRequest):
             payload.question,
             system=ASK_SYSTEM + "\n\n" + context,
             temperature=0.3,
-            max_tokens=500,
+            max_tokens=600,
         )
         return AskResponse(answer=answer, citations=citations[:30], subgraph=subgraph, engine=provider.name)
     except Exception:
@@ -168,7 +196,7 @@ async def whatif(payload: WhatIfRequest):
             "（配置 LLM 后可获得完整剧情推演）"
         )
 
-        provider = get_provider()
+        provider = _interactive_provider()
         if provider is None:
             return WhatIfResponse(narrative=fallback, engine="graph")
         prompt = (

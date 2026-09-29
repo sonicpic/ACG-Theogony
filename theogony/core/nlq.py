@@ -155,15 +155,20 @@ async def llm_parse(query: str) -> dict | None:
 
 
 def merge_filters(rule: dict, llm_out: dict | None) -> dict:
-    """融合规则与 LLM 结果：LLM 优先，规则补充。"""
+    """融合规则与 LLM 结果。
+
+    枚举字段（体系/关系/职阶/性别）以规则词表为准——它是枚举语义的权威映射；
+    LLM 补充规则覆盖不到的自由字段（search 等）与解析说明。
+    """
     if not llm_out:
         return rule
-    merged = {k: v for k, v in llm_out.items() if v}
-    for key in ("mythologies", "types", "classes"):
-        if key not in merged and rule.get(key):
-            merged[key] = rule[key]
-    if not merged.get("explanation"):
-        merged["explanation"] = rule.get("explanation", "")
-    else:
-        merged["explanation"] = merged["explanation"] + "（规则补充已合并）"
+    merged = dict(rule)
+    for key, value in llm_out.items():
+        if not value:
+            continue
+        if key in ("mythologies", "types", "classes", "gender", "onlyRelated") and merged.get(key):
+            continue  # 规则已命中，保留权威映射
+        merged[key] = value
+    explanations = [e for e in (rule.get("explanation"), llm_out.get("explanation")) if e]
+    merged["explanation"] = "；".join(explanations[:2])
     return merged

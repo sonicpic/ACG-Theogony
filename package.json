@@ -14,11 +14,12 @@
     "gen:types": "openapi-typescript data/openapi.json -o packages/shared/src/api.d.ts",
     "gen": "npm run gen:openapi && npm run gen:types",
     "api": "uv run uvicorn theogony.api.main:app --reload --port 8000",
-    "db:build": "uv run python -m theogony.pipelines.build_db",
-    "scrape": "uv run python -m theogony.pipelines.scrape_mooncell",
-    "enrich": "uv run python -m theogony.pipelines.enrich_llm",
-    "mine": "uv run python -m theogony.pipelines.mine_relations",
-    "research": "uv run python -m theogony.pipelines.luna_research",
+    "db:build": "uv run python -u -m theogony.pipelines.build_db",
+    "scrape": "uv run python -u -m theogony.pipelines.scrape_mooncell",
+    "enrich": "uv run python -u -m theogony.pipelines.enrich_llm",
+    "mine": "uv run python -u -m theogony.pipelines.mine_relations",
+    "research": "uv run python -u -m theogony.pipelines.luna_research",
+    "export-data": "uv run python -u -m theogony.pipelines.export_data",
     "test:py": "uv run pytest"
   },
   "devDependencies": {
