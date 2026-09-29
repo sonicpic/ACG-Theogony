@@ -147,23 +147,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/review/{relationship_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Review Decide */
-        post: operations["review_decide_api_review__relationship_id__post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/review/batch": {
         parameters: {
             query?: never;
@@ -175,9 +158,26 @@ export interface paths {
         put?: never;
         /**
          * Review Batch
-         * @description 批量审核：{"<id>": "approve"|"reject", ...}
+         * @description 批量审核：{"<id>": "approve"|"reject", ...}（reject 可撤销已批准项）
          */
         post: operations["review_batch_api_review_batch_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/review/{relationship_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Review Decide */
+        post: operations["review_decide_api_review__relationship_id__post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1264,20 +1264,20 @@ export interface operations {
             };
         };
     };
-    review_decide_api_review__relationship_id__post: {
+    review_batch_api_review_batch_post: {
         parameters: {
             query?: never;
             header?: {
                 "x-review-token"?: string | null;
             };
-            path: {
-                relationship_id: number;
-            };
+            path?: never;
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["ReviewDecision"];
+                "application/json": {
+                    [key: string]: string;
+                };
             };
         };
         responses: {
@@ -1301,20 +1301,20 @@ export interface operations {
             };
         };
     };
-    review_batch_api_review_batch_post: {
+    review_decide_api_review__relationship_id__post: {
         parameters: {
             query?: never;
             header?: {
                 "x-review-token"?: string | null;
             };
-            path?: never;
+            path: {
+                relationship_id: number;
+            };
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": {
-                    [key: string]: string;
-                };
+                "application/json": components["schemas"]["ReviewDecision"];
             };
         };
         responses: {

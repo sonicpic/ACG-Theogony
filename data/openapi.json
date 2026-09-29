@@ -582,6 +582,68 @@
         }
       }
     },
+    "/api/review/batch": {
+      "post": {
+        "tags": [
+          "relationships"
+        ],
+        "summary": "Review Batch",
+        "description": "批量审核：{\"<id>\": \"approve\"|\"reject\", ...}（reject 可撤销已批准项）",
+        "operationId": "review_batch_api_review_batch_post",
+        "parameters": [
+          {
+            "name": "x-review-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Review-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "title": "Decisions"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/review/{relationship_id}": {
       "post": {
         "tags": [
@@ -622,68 +684,6 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ReviewDecision"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/review/batch": {
-      "post": {
-        "tags": [
-          "relationships"
-        ],
-        "summary": "Review Batch",
-        "description": "批量审核：{\"<id>\": \"approve\"|\"reject\", ...}",
-        "operationId": "review_batch_api_review_batch_post",
-        "parameters": [
-          {
-            "name": "x-review-token",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "X-Review-Token"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "string"
-                },
-                "title": "Decisions"
               }
             }
           }
