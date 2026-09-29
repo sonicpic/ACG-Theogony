@@ -119,7 +119,7 @@ export const api = {
   submitRelation(payload: { sourceId: string; targetId: string; type: string; evidence: string; contributor?: string }) {
     return post<RelationshipDTO>("/relationships", payload);
   },
-  reviewPending(token: string) {
+  reviewPending(_token: string) {
     return get<{ total: number; items: RelationshipDTO[] }>("/review/pending", { limit: 100 });
   },
   reviewDecide(id: number, action: "approve" | "reject", token: string, note = "") {

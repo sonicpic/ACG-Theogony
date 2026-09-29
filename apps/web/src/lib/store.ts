@@ -47,7 +47,7 @@ interface GraphViewState {
   resetFilters(): void;
 }
 
-export const useGraphView = create<GraphViewState>((set, get) => ({
+export const useGraphView = create<GraphViewState>((set) => ({
   mythologies: [],
   classes: [],
   types: [],

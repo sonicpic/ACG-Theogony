@@ -34,9 +34,6 @@ export default function GraphExplorerPage() {
       if (store.maxWikiId && n.wikiId > store.maxWikiId) return false;
       if (mythSet.size && !mythSet.has(n.mythology || "")) return false;
       if (classSet.size && !classSet.has(n.className)) return false;
-      if (store.gender && !store.gender.includes(n.id)) {
-        // gender 过滤在节点数据里没有，需要后端属性——跳过（NLQ 已在后端过滤主要场景）
-      }
       return true;
     });
     const ids = new Set(nodes.map((n) => n.id));

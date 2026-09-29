@@ -139,7 +139,7 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
       c.members.forEach((m) => map.set(m, color));
     });
     return map;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [data.meta.clusters]);
 
   // ── 建图 + 渲染器（仅数据变化时重建）──
@@ -450,7 +450,7 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
       sigmaRef.current = null;
       graphRef.current = null;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [data, clusterColor]);
 
   return (

@@ -1,15 +1,15 @@
-import { FlatCompat } from "@eslint/eslintrc";
-
-const compat = new FlatCompat({ baseDirectory: import.meta.dirname });
+import coreWebVitals from "eslint-config-next/core-web-vitals";
+import typescript from "eslint-config-next/typescript";
 
 const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+  ...coreWebVitals,
+  ...typescript,
   {
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
     },
   },
-  { ignores: [".next/**", "node_modules/**", "src/components/graph/Graph3D.d.ts"] },
+  { ignores: [".next/**", "node_modules/**"] },
 ];
 
 export default eslintConfig;

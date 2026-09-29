@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
 import { Download, Globe2, Network, RotateCcw, Search, Sparkles, Boxes } from "lucide-react";
 import { api } from "@/lib/api";
-import { CATEGORY_LABEL, MYTHOLOGY_COLORS, RELATION_META, mythColor } from "@/lib/constants";
+import { CATEGORY_LABEL, RELATION_META, mythColor } from "@/lib/constants";
 import type { GraphDTO } from "@/lib/types";
 import { useGraphView } from "@/lib/store";
 import { exportPng, exportSvg } from "@/lib/exporters";
