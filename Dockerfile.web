@@ -12,10 +12,9 @@ RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
 
 WORKDIR /repo
 
-# Python 依赖层（保持缓存稳定；hatchling 单独一层，装一次即缓存）
+# Python 依赖层（uv 缓存用 BuildKit 卷持久化：首次构建后不再访问 PyPI）
 COPY README.md pyproject.toml uv.lock ./
-RUN uv sync --frozen --no-install-project --no-dev
-RUN uv pip install hatchling
+RUN --mount=type=cache,target=/root/.cache/uv uv sync --frozen --no-install-project --no-dev
 
 # 前端依赖层
 COPY package.json package-lock.json ./
@@ -28,8 +27,7 @@ COPY theogony ./theogony
 COPY data ./data
 COPY docker ./docker
 COPY . .
-# --no-build-isolation：复用上面缓存的 hatchling，源码改动重构建时不碰网络
-RUN uv sync --frozen --no-dev --no-build-isolation
+RUN --mount=type=cache,target=/root/.cache/uv uv sync --frozen --no-dev
 
 # 前端构建（rewrites 在 build 期固化，API 地址必须此时注入）
 RUN npm run gen:types

@@ -1,11 +1,17 @@
 # 单容器部署（host 网络，对外仅 58115）：
-#   cd ~/services/acg-theogony && docker compose up -d --build
+#   本机构建（Clash TUN 下 docker 桥接直连 PyPI 超时，必须走 host 网络 + buildx 授权）：
+#     docker buildx build --allow network.host --network host -f Dockerfile.web \
+#       --build-arg API_ORIGIN=http://127.0.0.1:18000 -t acg-theogony:web --load .
+#     docker compose up -d
+#   （compose build 的 network:host 会卡在 BuildKit --allow 授权门，故构建绕开 compose）
 # FastAPI 与 Next 同容器运行，API 只绑 127.0.0.1:8000（容器回环），无独立容器/端口。
 services:
   web:
     build:
       context: .
       dockerfile: Dockerfile.web
+      # 构建走 host 网络：本机 Clash TUN 环境下 docker 桥接网络直连 PyPI 会超时
+      network: host
       args:
         - API_ORIGIN=http://127.0.0.1:18000
     image: acg-theogony:web
