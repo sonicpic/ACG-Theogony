@@ -20,6 +20,8 @@ class Settings(BaseSettings):
 
     # 数据
     data_dir: Path = REPO_ROOT / "data"
+    # 外部数据源代理（Wikidata 等在部分网络环境下需要；Provider 层自动回退直连）
+    http_proxy: str = "http://127.0.0.1:7897"
     db_path: Path = REPO_ROOT / "data" / "theogony.db"
 
     # DeepSeek
