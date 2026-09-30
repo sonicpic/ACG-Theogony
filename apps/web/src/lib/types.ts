@@ -139,11 +139,17 @@ export function imgProxy(url: string): string {
 
 /** 同源角色雷达（/api/prototypes） */
 
+export interface PrototypeIncarnationWork {
+  name: string;
+  kind: string;
+}
+
 export interface PrototypeFgoIncarnation {
   id: string;
   name: string;
   className: string;
   imageUrl: string;
+  works: PrototypeIncarnationWork[];
 }
 
 export interface PrototypeOtherIncarnation {
@@ -151,6 +157,7 @@ export interface PrototypeOtherIncarnation {
   name: string;
   media: string;
   description: string;
+  works: PrototypeIncarnationWork[];
 }
 
 export interface PrototypeWork {

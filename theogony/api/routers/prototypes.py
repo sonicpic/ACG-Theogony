@@ -8,9 +8,14 @@ from sqlalchemy import select
 
 from theogony.core.db import get_session
 from theogony.core.graph import GraphService
-from theogony.core.orm import Work
+from theogony.core.orm import Appearance, Work
 
 router = APIRouter(tags=["prototypes"])
+
+
+class IncarnationWork(BaseModel):
+    name: str
+    kind: str
 
 
 class FgoIncarnation(BaseModel):
@@ -18,6 +23,7 @@ class FgoIncarnation(BaseModel):
     name: str
     className: str = ""
     imageUrl: str = ""
+    works: list[IncarnationWork] = []
 
 
 class OtherIncarnation(BaseModel):
@@ -25,6 +31,7 @@ class OtherIncarnation(BaseModel):
     name: str
     media: str = ""
     description: str = ""
+    works: list[IncarnationWork] = []
 
 
 class WorkItem(BaseModel):
@@ -53,6 +60,14 @@ def list_prototypes():
         works_by_qid: dict[str, list[WorkItem]] = {}
         for w in session.execute(select(Work).where(Work.prototype_qid.is_not(None))).scalars().all():
             works_by_qid.setdefault(w.prototype_qid, []).append(WorkItem(id=w.id, name=w.name, kind=w.kind))
+        # 角色的出演作品（Bangumi 收割）
+        works_by_id = {w.id: w for w in session.execute(select(Work)).scalars().all()}
+        appears_by_char: dict[str, list[dict]] = {}
+        for a in session.execute(select(Appearance)).scalars().all():
+            w = works_by_id.get(a.work_id)
+            if w:
+                appears_by_char.setdefault(a.character_id, []).append(
+                    {"name": w.name, "kind": w.kind})
     finally:
         session.close()
 
@@ -66,13 +81,14 @@ def list_prototypes():
             if s is None:
                 continue
             if s.source == "fgo":
-                fgo.append(FgoIncarnation(id=s.id, name=s.name, className=s.class_name or "",
-                                          imageUrl=s.image_url or "").model_dump())
+                fgo.append({"id": s.id, "name": s.name, "className": s.class_name or "",
+                            "imageUrl": s.image_url or "",
+                            "works": appears_by_char.get(s.id, [])[:3]})
             else:
-                others.append(OtherIncarnation(
-                    id=s.id, name=s.name,
-                    media=(s.extra or {}).get("media", "other-media"),
-                    description=(s.description or "")[:80]).model_dump())
+                others.append({"id": s.id, "name": s.name,
+                               "media": (s.extra or {}).get("media", "other-media"),
+                               "description": (s.description or "")[:80],
+                               "works": appears_by_char.get(s.id, [])[:3]})
         items.append({
             "id": cid,
             "name": c.name,

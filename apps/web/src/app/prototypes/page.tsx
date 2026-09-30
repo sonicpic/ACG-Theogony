@@ -198,7 +198,7 @@ export default function PrototypesPage() {
                       ) : (
                         <span className="h-5 w-5 rounded-full" style={{ background: mythColor(selected.mythology) }} />
                       )}
-                      {f.name}
+                      <span title={f.works?.map((w) => w.name).join("、")}>{f.name}</span>
                     </Link>
                   ))}
                 </div>
@@ -213,7 +213,15 @@ export default function PrototypesPage() {
                 <div className="space-y-1.5">
                   {selected.others.map((o) => (
                     <div key={o.id} className="flex items-center justify-between gap-2 text-xs">
-                      <span className="truncate text-zinc-200">{o.name}</span>
+                      <span className="min-w-0 truncate text-zinc-200">
+                        {o.name}
+                        {o.works?.length > 0 && (
+                          <span className="ml-1.5 text-[10px] text-zinc-500">
+                            《{o.works[0].name}》
+                            {o.works.length > 1 ? ` 等${o.works.length}部` : ""}
+                          </span>
+                        )}
+                      </span>
                       <span className="shrink-0 rounded bg-zinc-800 px-1.5 py-0.5 text-[10px] text-zinc-400">
                         {o.media === "acg" ? "ACG" : "影视/文学"}
                       </span>

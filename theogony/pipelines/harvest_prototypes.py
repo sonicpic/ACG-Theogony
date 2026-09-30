@@ -313,8 +313,9 @@ async def harvest(wd: WikidataProvider, seeds: list[dict], max_per_proto: int, m
                 continue
             ct = class_text(r["qid"])
             norm = normalize_name(r["label"])
-            is_char = bool(_CHAR_CLASS_RE.search(ct)) and not _WORK_CLASS_RE.search(ct)
-            is_work = bool(_WORK_CLASS_RE.search(ct))
+            # 角色类命中优先（类文本常同时含 media 词，如 "Touhou character, video game"）
+            is_char = bool(_CHAR_CLASS_RE.search(ct))
+            is_work = (not is_char) and bool(_WORK_CLASS_RE.search(ct))
             if not (is_char or is_work):
                 stats["skipped"] += 1
                 continue
