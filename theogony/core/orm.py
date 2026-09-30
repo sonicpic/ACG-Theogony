@@ -41,6 +41,7 @@ class Character(Base):
     image_url: Mapped[str] = mapped_column(Text, default="")
     detail_url: Mapped[str] = mapped_column(Text, default="")
     source: Mapped[str] = mapped_column(String(32), default="fgo", index=True)
+    wikidata_qid: Mapped[str | None] = mapped_column(String(32), nullable=True, index=True)
     extra: Mapped[dict] = mapped_column(JSON, default=dict)  # 宝具/技能/出场等
     myth_source: Mapped[str] = mapped_column(String(16), default="rule")  # rule|llm|wiki
     enriched_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
@@ -63,6 +64,21 @@ class Alias(Base):
     lang: Mapped[str] = mapped_column(String(8), default="zh")
 
     character: Mapped[Character] = relationship(back_populates="aliases")
+
+
+class Work(Base):
+    """作品（动画/漫画/游戏/小说/影视），多源统一，Wikidata 为锚。"""
+
+    __tablename__ = "works"
+
+    id: Mapped[str] = mapped_column(String(32), primary_key=True)  # ww:Q...
+    name: Mapped[str] = mapped_column(String(256), index=True)
+    kind: Mapped[str] = mapped_column(String(16), default="other")  # anime|manga|game|novel|film|tv|comic|other
+    wikidata_qid: Mapped[str | None] = mapped_column(String(32), nullable=True, index=True)
+    prototype_qid: Mapped[str | None] = mapped_column(String(32), nullable=True, index=True)  # 基于的原型
+    source: Mapped[str] = mapped_column(String(16), default="wikidata")
+    extra: Mapped[dict] = mapped_column(JSON, default=dict)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
 
 
 class Relationship(Base):

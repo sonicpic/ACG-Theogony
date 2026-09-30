@@ -80,6 +80,8 @@ class WikidataProvider(HttpProviderBase):
             "label": x.get("label", ""),
             "description": x.get("description", ""),
             "match": x.get("match", {}).get("type", ""),
+            # 命中的实际文本（zh 别名命中时 label 可能是英文，match.text 才是比对依据）
+            "match_text": x.get("match", {}).get("text", ""),
         } for x in d.get("search", [])]
 
     async def resolve_claims(self, qids: list[str], batch_size: int = 100) -> dict[str, dict]:

@@ -48,6 +48,15 @@ def init_db() -> None:
     Base.metadata.create_all(engine)
     with engine.begin() as conn:
         conn.execute(text(FTS_DDL))
+        _migrate(conn)
+
+
+def _migrate(conn) -> None:
+    """轻量列迁移：create_all 不改已有表，新列在此补齐（幂等）。"""
+    cols = {row[1] for row in conn.execute(text("PRAGMA table_info(characters)"))}
+    if "wikidata_qid" not in cols:
+        conn.execute(text("ALTER TABLE characters ADD COLUMN wikidata_qid VARCHAR(32)"))
+        conn.execute(text("CREATE INDEX IF NOT EXISTS ix_characters_wikidata_qid ON characters(wikidata_qid)"))
 
 
 def get_session() -> Session:

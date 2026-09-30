@@ -20,7 +20,8 @@
     "mine": "uv run python -u -m theogony.pipelines.mine_relations",
     "research": "uv run python -u -m theogony.pipelines.luna_research",
     "export-data": "uv run python -u -m theogony.pipelines.export_data",
-    "test:py": "uv run pytest"
+    "test:py": "uv run pytest",
+    "harvest": "python -u -m theogony.pipelines.harvest_prototypes"
   },
   "devDependencies": {
     "openapi-typescript": "^7.5.0"
