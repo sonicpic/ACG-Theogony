@@ -120,8 +120,8 @@ const FA2_SETTINGS = {
   adjustSizes: true,
   edgeWeightInfluence: 0.6,
   scalingRatio: 2.2,
-  gravity: 0.04,
-  slowDown: 1.6,
+  gravity: 2.0, // 向心重力：净收缩趋势，入场即"星云聚拢"且快速收敛（低重力会持续膨胀）
+  slowDown: 2.2,
   barnesHutOptimize: true,
 } as const;
 
@@ -165,7 +165,7 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
       let pos = start?.get(node.id) || settledPositions.get(node.id);
       if (!pos) {
         const i = hash32(node.id) % 9973;
-        const r = 0.5 * Math.sqrt(i + 1);
+        const r = 2.0 * Math.sqrt(i + 1); // 撒开：初始取景框即覆盖布局活动期，FA2 向心聚拢成入场动画
         const ang = i * 2.399963;
         pos = { x: Math.cos(ang) * r, y: Math.sin(ang) * r };
       }
@@ -216,17 +216,15 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
 
     /** 静置：保存位置 → bump 纪元触发 Sigma 重建（拾取恢复一致） */
     function saveAndReinstance() {
-      graph.forEachNode((n, a) => settledPositions.set(n, { x: a.x, y: a.y }));
       normalizePositions();
       graph.forEachNode((n, a) => settledPositions.set(n, { x: a.x, y: a.y }));
       store.getState().bumpLayoutEpoch();
     }
 
-    function fitCamera(duration = 900, normalize = true) {
-      if (normalize) normalizePositions();
-      // Sigma v3 相机 x/y 即图空间坐标；normalizePositions 已把 bbox 中心置于原点
+    function fitCamera(duration = 900) {
+      // Sigma v3 相机 x/y 是归一化取景空间坐标：(0.5,0.5)=画面中心，(0,0)=取景框角落
       void sigma.getCamera().animate(
-        { x: 0, y: 0, ratio: 1.02 },
+        { x: 0.5, y: 0.5, ratio: 1.02 },
         { duration, easing: (t) => easeInOutCubic(t) }
       );
     }
@@ -247,9 +245,6 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
       const startedAt = performance.now();
       const tick = () => {
         forceAtlas2.assign(graph, { iterations: 2, settings: { ...FA2_SETTINGS } });
-        // 每帧锚定全局尺度：FA2 会寻求更大的自然平衡尺寸（紧凑态重启会膨胀数倍），
-        // 归一化让节点相对浮动而整体大小/视图稳定。
-        normalizePositions();
         const elapsed = performance.now() - startedAt;
         if (elapsed < (autoStopMs ?? 15000) && !userTookOver) {
           layoutRafRef.current = requestAnimationFrame(tick);
@@ -259,9 +254,9 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
       };
       layoutRafRef.current = requestAnimationFrame(tick);
     };
-    /** 位置归一化：缩放到 Sigma 视口友好尺度（中心 0,0，最大半径 12） */
+    /** 位置归一化：仅在布局静置后统一尺度（中心 0,0，最大半径 12）。
+     *  活布局期间绝不调用——与 FA2 膨胀趋势打架会产生帧级锯齿（抖动）。 */
     const normalizePositions = () => {
-      // 以 bbox 中心为原点（与 Sigma framed 取景中心一致），最大半径缩放到 12
       let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
       graph.forEachNode((_, a) => {
         x0 = Math.min(x0, a.x); x1 = Math.max(x1, a.x);
@@ -281,7 +276,7 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
     if (stableMode) {
       fitCamera(50);
     } else if (viewModeRef.current !== "geo") {
-      startLayout(16000);
+      startLayout(5000);
     }
 
     const fitTimer1 = stableMode ? undefined : window.setTimeout(() => fitCamera(1100), 2400);
@@ -290,7 +285,7 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
         stopLayout();
         saveAndReinstance();
       }
-    }, 17000);
+    }, 5500);
 
     // ── 布局变形动画 ──
     async function tweenPositions(target: Map<string, { x: number; y: number }> | null) {
@@ -320,17 +315,26 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
       });
     }
 
-    /** 相机聚焦：直接飞向目标点（Sigma v3 相机 x/y 即图空间坐标，官方语义）。
-     *  保持缩放但轻微放大，让聚焦对象更醒目。 */
+    /** 相机聚焦：目标图坐标 → 屏幕像素 → 归一化取景坐标（相机语义），飞向目标并轻微放大。
+     *  依赖 graphToViewport（矩阵须已暖；显式定位时用户已交互过）。 */
     async function centerOnGraphPoint(gx: number, gy: number, duration = 650) {
       if (centeringRef.current) return;
       centeringRef.current = true;
-      const cam = sigma.getCamera();
-      await cam.animate(
-        { x: gx, y: gy, ratio: Math.min(cam.ratio, 0.72) },
-        { duration, easing: (t) => easeInOutCubic(t) }
-      );
-      centeringRef.current = false;
+      try {
+        if (!matrixWarmed) {
+          sigma.refresh();
+          await new Promise((r) => requestAnimationFrame(r));
+        }
+        const el = containerRef.current!;
+        const p = sigma.graphToViewport({ x: gx, y: gy });
+        const cam = sigma.getCamera();
+        await cam.animate(
+          { x: p.x / el.clientWidth, y: p.y / el.clientHeight, ratio: Math.min(cam.ratio, 0.72) },
+          { duration, easing: (t) => easeInOutCubic(t) }
+        );
+      } finally {
+        centeringRef.current = false;
+      }
     }
 
     async function morphLayout(mode: string) {
@@ -340,11 +344,11 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
         await tweenPositions(galaxyPositions(data));
       } else {
         await tweenPositions(null);
-        startLayout(12000);
+        startLayout(5000);
         window.setTimeout(() => {
           stopLayout();
           saveAndReinstance();
-        }, 13000);
+        }, 5500);
         return;
       }
       fitCamera(800);
@@ -651,7 +655,7 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
       }
       // 取消高亮：力导向模式恢复活布局（节点重新浮动）
       if (state.cancelFocusNonce !== prev.cancelFocusNonce) {
-        if (viewModeRef.current === "force") startLayout(8000);
+        if (viewModeRef.current === "force") startLayout(5000);
       }
       // 重置视图：恢复静置布局 + 归一化 + 相机回中心全景
       if (state.resetViewNonce !== prev.resetViewNonce) {
@@ -665,12 +669,11 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
             }
           });
         }
-        normalizePositions();
         void sigma.getCamera().animate(
-          { x: 0, y: 0, ratio: 1.02 },
+          { x: 0.5, y: 0.5, ratio: 1.02 },
           { duration: 700, easing: (t) => easeInOutCubic(t) }
         );
-        if (viewModeRef.current === "force") startLayout(8000);
+        if (viewModeRef.current === "force") startLayout(5000);
         sigma.refresh();
       }
       if (state.viewMode !== prev.viewMode) void morphLayout(state.viewMode);
