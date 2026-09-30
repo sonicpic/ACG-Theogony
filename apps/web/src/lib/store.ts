@@ -24,6 +24,7 @@ interface GraphViewState {
   selectedId: string | null;
   hoveredId: string | null;
   focusId: string | null; // 触发相机聚焦
+  focusNonce: number; // 显式定位计数（区分点选与定位）
   askIds: string[] | null; // RAG 子图高亮
   // 路径探索
   pathFrom: string | null;
@@ -31,6 +32,15 @@ interface GraphViewState {
   pathResult: PathDTO | null;
   // 面板
   askOpen: boolean;
+  // 移动端抽屉：filter | path | ask | null（桌面端不使用）
+  mobilePanel: string | null;
+  tourOpen: boolean;
+  // 桌面路径面板展开（点边时自动展开）
+  pathPanelOpen: boolean;
+  // 布局纪元：静置后 bump 触发 Sigma 重建（恢复拾取/坐标系一致性）
+  layoutEpoch: number;
+  // 全局轻提示
+  toast: { id: number; msg: string } | null;
 
   setFilters(partial: Partial<Pick<GraphViewState, "mythologies" | "classes" | "types" | "gender" | "onlyRelated" | "showMythNodes" | "maxWikiId">>): void;
   toggleMythology(m: string): void;
@@ -44,6 +54,11 @@ interface GraphViewState {
   setAskIds(ids: string[] | null): void;
   setPath(from: string | null, to: string | null, result?: PathDTO | null): void;
   setAskOpen(open: boolean): void;
+  setMobilePanel(panel: string | null): void;
+  setTourOpen(open: boolean): void;
+  setPathPanelOpen(open: boolean): void;
+  bumpLayoutEpoch(): void;
+  showToast(msg: string): void;
   resetFilters(): void;
 }
 
@@ -60,11 +75,17 @@ export const useGraphView = create<GraphViewState>((set) => ({
   selectedId: null,
   hoveredId: null,
   focusId: null,
+  focusNonce: 0,
   askIds: null,
   pathFrom: null,
   pathTo: null,
   pathResult: null,
   askOpen: false,
+  mobilePanel: null,
+  tourOpen: typeof window !== "undefined" && !localStorage.getItem("theogony-tour-done"),
+  pathPanelOpen: false,
+  layoutEpoch: 0,
+  toast: null,
 
   setFilters: (partial) => set(partial),
   toggleMythology: (m) =>
@@ -83,10 +104,25 @@ export const useGraphView = create<GraphViewState>((set) => ({
   setColorBy: (c) => set({ colorBy: c }),
   select: (id) => set({ selectedId: id, focusId: id }),
   hover: (id) => set({ hoveredId: id }),
-  focus: (id) => set({ focusId: id }),
+  focus: (id) => set((s) => ({ focusId: id, focusNonce: s.focusNonce + 1 })),
   setAskIds: (ids) => set({ askIds: ids }),
   setPath: (from, to, result = null) => set({ pathFrom: from, pathTo: to, pathResult: result }),
   setAskOpen: (open) => set({ askOpen: open }),
+  setMobilePanel: (panel) => set({ mobilePanel: panel }),
+  setPathPanelOpen: (open) => set({ pathPanelOpen: open }),
+  bumpLayoutEpoch: () => set((s) => ({ layoutEpoch: s.layoutEpoch + 1 })),
+  showToast: (msg) => {
+    const id = Date.now();
+    set({ toast: { id, msg } });
+    setTimeout(() => {
+      const t = useGraphView.getState().toast;
+      if (t && t.id === id) set({ toast: null });
+    }, 2600);
+  },
+  setTourOpen: (open) => {
+    if (!open && typeof window !== "undefined") localStorage.setItem("theogony-tour-done", "1");
+    set({ tourOpen: open });
+  },
   resetFilters: () =>
     set({
       mythologies: [],

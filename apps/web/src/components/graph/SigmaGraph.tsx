@@ -27,6 +27,10 @@ import { highlightSets, useGraphView } from "@/lib/store";
 
 const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
+// 布局静置后的位置缓存：重建 Sigma 时复用（保证拾取与坐标系一致）
+const settledPositions = new Map<string, { x: number; y: number }>();
+let stableMode = false;
+
 function hash32(seed: string): number {
   let h = 2166136261;
   for (let i = 0; i < seed.length; i++) {
@@ -127,6 +131,7 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
   const layoutRafRef = useRef<number | null>(null);
   const rafRef = useRef<number | null>(null);
   const hoverEdgeRef = useRef<string | null>(null);
+  const centeringRef = useRef(false);
   const viewModeRef = useRef<string>("force");
   const tooltipLiveRef = useRef(false);
 
@@ -152,7 +157,7 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
     for (const node of data.nodes) {
       if (graph.hasNode(node.id)) continue;
       const isMyth = node.kind === "myth";
-      let pos = start?.get(node.id);
+      let pos = start?.get(node.id) || settledPositions.get(node.id);
       if (!pos) {
         const i = hash32(node.id) % 9973;
         const r = 0.5 * Math.sqrt(i + 1);
@@ -203,8 +208,17 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
     sigmaRef.current = sigma;
     graphRef.current = graph;
 
+    /** 静置：保存位置 → bump 纪元触发 Sigma 重建（拾取恢复一致） */
+    function saveAndReinstance() {
+      graph.forEachNode((n, a) => settledPositions.set(n, { x: a.x, y: a.y }));
+      normalizePositions();
+      graph.forEachNode((n, a) => settledPositions.set(n, { x: a.x, y: a.y }));
+      store.getState().bumpLayoutEpoch();
+    }
+
     function fitCamera(duration = 900, normalize = true) {
       if (normalize) normalizePositions();
+      // Sigma v3 相机 x/y 即图空间坐标；normalizePositions 已把 bbox 中心置于原点
       void sigma.getCamera().animate(
         { x: 0, y: 0, ratio: 1.02 },
         { duration, easing: (t) => easeInOutCubic(t) }
@@ -238,22 +252,36 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
     };
     /** 位置归一化：缩放到 Sigma 视口友好尺度（中心 0,0，最大半径 12） */
     const normalizePositions = () => {
-      let cx = 0, cy = 0, n = 0;
-      graph.forEachNode((_, a) => { cx += a.x; cy += a.y; n++; });
-      if (!n) return;
-      cx /= n; cy /= n;
-      let maxR = 0;
-      graph.forEachNode((_, a) => { maxR = Math.max(maxR, Math.hypot(a.x - cx, a.y - cy)); });
-      const k = maxR > 0 ? 12 / maxR : 1;
+      // 以 bbox 中心为原点（与 Sigma framed 取景中心一致），最大半径缩放到 12
+      let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+      graph.forEachNode((_, a) => {
+        x0 = Math.min(x0, a.x); x1 = Math.max(x1, a.x);
+        y0 = Math.min(y0, a.y); y1 = Math.max(y1, a.y);
+      });
+      if (!Number.isFinite(x0)) return;
+      const cx = (x0 + x1) / 2;
+      const cy = (y0 + y1) / 2;
+      const maxR = Math.max((x1 - x0) / 2, (y1 - y0) / 2, 0.001);
+      const k = 12 / maxR;
       graph.forEachNode((id, a) => {
         graph.setNodeAttribute(id, "x", (a.x - cx) * k);
         graph.setNodeAttribute(id, "y", (a.y - cy) * k);
       });
     };
-    if (viewModeRef.current !== "geo") startLayout(22000);
+    stableMode = settledPositions.size > 0 && viewModeRef.current !== "geo";
+    if (stableMode) {
+      fitCamera(50);
+    } else if (viewModeRef.current !== "geo") {
+      startLayout(16000);
+    }
 
-    const fitTimer1 = window.setTimeout(() => fitCamera(1100, false), 2400);
-    const fitTimer2 = window.setTimeout(() => fitCamera(1400), 13000);
+    const fitTimer1 = stableMode ? undefined : window.setTimeout(() => fitCamera(1100, false), 2400);
+    const fitTimer2 = window.setTimeout(() => {
+      if (!stableMode && viewModeRef.current === "force") {
+        stopLayout();
+        saveAndReinstance();
+      }
+    }, 17000);
 
     // ── 布局变形动画 ──
     async function tweenPositions(target: Map<string, { x: number; y: number }> | null) {
@@ -283,6 +311,19 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
       });
     }
 
+    /** 相机聚焦：直接飞向目标点（Sigma v3 相机 x/y 即图空间坐标，官方语义）。
+     *  保持缩放但轻微放大，让聚焦对象更醒目。 */
+    async function centerOnGraphPoint(gx: number, gy: number, duration = 650) {
+      if (centeringRef.current) return;
+      centeringRef.current = true;
+      const cam = sigma.getCamera();
+      await cam.animate(
+        { x: gx, y: gy, ratio: Math.min(cam.ratio, 0.72) },
+        { duration, easing: (t) => easeInOutCubic(t) }
+      );
+      centeringRef.current = false;
+    }
+
     async function morphLayout(mode: string) {
       viewModeRef.current = mode;
       if (mode === "geo") {
@@ -290,9 +331,15 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
         await tweenPositions(galaxyPositions(data));
       } else {
         await tweenPositions(null);
-        startLayout(15000);
+        startLayout(12000);
+        window.setTimeout(() => {
+          stopLayout();
+          saveAndReinstance();
+        }, 13000);
+        return;
       }
       fitCamera(800);
+      saveAndReinstance();
     }
 
     function recolor(mode: string) {
@@ -316,14 +363,58 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
     let dragNode: string | null = null;
     let pointerPos = { x: 0, y: 0 };
 
-    sigma.on("downNode", ({ node, event }) => {
-      event.preventSigmaDefault();
+    /** 数学最近邻命中测试：WebGL 拾取在部分环境不可靠时的全平台兜底 */
+    const hitTest = (px: number, py: number): string | null => {
+      let best: string | null = null;
+      let bestD = Infinity;
+      graph.forEachNode((n, a) => {
+        const sc = sigma.graphToViewport({ x: a.x, y: a.y });
+        const d = Math.hypot(sc.x - px, sc.y - py);
+        const r = Math.max(14, (a.size || 4) + 8);
+        if (d < r && d < bestD) {
+          bestD = d;
+          best = n;
+        }
+      });
+      return best;
+    };
+
+    /** graphToViewport 的归一化矩阵在重建后是未初始化状态（所有点坍缩到中心）；
+     *  sigma.refresh() 异步落地后矩阵才正确——本 tick 内重试无效，必须等一帧。 */
+    let matrixWarmed = false;
+    const warmMatrix = () => {
+      if (matrixWarmed) return;
+      matrixWarmed = true;
+      sigma.refresh();
+    };
+
+    const selectNode = (node: string) => {
+      const g = graph.getNodeAttributes(node) as { nodeData: GraphNode };
+      store.getState().showToast(`已选中 ${g.nodeData.name} · 关系已高亮`);
+      store.getState().select(node);
+    };
+
+    const beginDrag = (node: string) => {
       dragNode = node;
       graph.setNodeAttribute(node, "fixed", true);
-      stopLayout();
+      stopLayout(); // 用户接管布局
       containerRef.current!.style.cursor = "grabbing";
+    };
+
+    sigma.on("downNode", ({ node, event }) => {
+      event.preventSigmaDefault();
+      beginDrag(node);
+    });
+    sigma.on("downStage", ({ event }) => {
+      if (!matrixWarmed) {
+        warmMatrix();
+        return; // 首次交互只暖矩阵；拖拽由 downNode 原生路径承担
+      }
+      const hit = hitTest(event.x, event.y);
+      if (hit) beginDrag(hit);
     });
 
+    let lastHoverProbe = 0;
     sigma.on("moveBody", (e) => {
       pointerPos = { x: e.event.x, y: e.event.y };
       if (tooltipLiveRef.current) {
@@ -334,6 +425,29 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
         const p = sigma.viewportToGraph({ x: e.event.x, y: e.event.y });
         graph.setNodeAttribute(dragNode, "x", p.x);
         graph.setNodeAttribute(dragNode, "y", p.y);
+        return;
+      }
+      // 悬停兜底（节流 80ms）：原生 enterNode 失效时用命中测试
+      const now = performance.now();
+      if (now - lastHoverProbe > 80) {
+        lastHoverProbe = now;
+        if (!matrixWarmed) {
+          warmMatrix(); // 本帧暖矩阵，下一帧起悬停即准确
+          return;
+        }
+        const hit = hitTest(e.event.x, e.event.y);
+        if (hit) {
+          const attrs = graph.getNodeAttributes(hit) as { nodeData: GraphNode };
+          tooltipLiveRef.current = true;
+          setTooltip((t) =>
+            t && t.node.id === hit ? { ...t, x: e.event.x, y: e.event.y } : { x: e.event.x, y: e.event.y, node: attrs.nodeData }
+          );
+          containerRef.current!.style.cursor = "grab";
+        } else if (tooltipLiveRef.current) {
+          tooltipLiveRef.current = false;
+          setTooltip(null);
+          containerRef.current!.style.cursor = "default";
+        }
       }
     });
 
@@ -346,15 +460,38 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
     };
     window.addEventListener("mouseup", endDrag);
 
+    // 用户一旦交互，取消所有自动对焦（否则会在点击后突然把画面挪走）
+    const cancelAutoFit = () => {
+      if (fitTimer1) clearTimeout(fitTimer1);
+      clearTimeout(fitTimer2);
+    };
+
     sigma.on("clickNode", ({ node }) => {
+      cancelAutoFit();
       setTooltip(null);
       tooltipLiveRef.current = false;
-      store.getState().select(node);
+      selectNode(node);
     });
-    sigma.on("clickStage", () => {
-      tooltipLiveRef.current = false;
-      setTooltip(null);
-      store.getState().select(null);
+    sigma.on("clickStage", ({ event }) => {
+      cancelAutoFit();
+      const px = event.x;
+      const py = event.y;
+      const finish = () => {
+        const hit = hitTest(px, py);
+        if (hit) {
+          selectNode(hit);
+        } else {
+          tooltipLiveRef.current = false;
+          setTooltip(null);
+          store.getState().select(null);
+        }
+      };
+      if (!matrixWarmed) {
+        warmMatrix();
+        requestAnimationFrame(finish); // refresh 落地要等一帧，矩阵才可信
+      } else {
+        finish();
+      }
     });
     sigma.on("enterNode", ({ node }) => {
       containerRef.current!.style.cursor = "grab";
@@ -368,9 +505,23 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
       setTooltip(null);
     });
     sigma.on("clickEdge", ({ edge }) => {
+      cancelAutoFit();
       const [s, t] = graph.extremities(edge);
       store.getState().setPath(s, t, null);
-      void api.paths(s, t).then((r) => store.getState().setPath(s, t, r));
+      // 自动展开路径面板并提示（否则用户不知道发生了什么）
+      if (window.innerWidth < 768) {
+        store.getState().setMobilePanel("path");
+      } else {
+        store.getState().setPathPanelOpen(true);
+      }
+      void api.paths(s, t).then((r) => {
+        store.getState().setPath(s, t, r);
+        const names = graph.getNodeAttributes(s).nodeData as GraphNode;
+        const namet = graph.getNodeAttributes(t).nodeData as GraphNode;
+        store.getState().showToast(
+          r.found ? `${names.name} → ${namet.name}：${r.distance} 步` : `${names.name} 与 ${namet.name} 不连通`
+        );
+      });
     });
     sigma.on("enterEdge", ({ edge }) => {
       hoverEdgeRef.current = edge;
@@ -419,13 +570,11 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
       ) {
         sigma.refresh();
       }
-      if (state.focusId && state.focusId !== prev.focusId) {
+      // 平移居中只服务显式定位（focus() 触发 nonce）；普通点选不挪画面，保持视图稳定
+      if (state.focusNonce !== prev.focusNonce && state.focusId) {
         const attrs = graph.getNodeAttributes(state.focusId);
         if (Number.isFinite(attrs.x)) {
-          void sigma.getCamera().animate(
-            { x: attrs.x, y: attrs.y, ratio: Math.min(sigma.getCamera().ratio, 1.1) },
-            { duration: 650, easing: (t) => easeInOutCubic(t) }
-          );
+          void centerOnGraphPoint(attrs.x, attrs.y);
         }
       }
       if (state.viewMode !== prev.viewMode) void morphLayout(state.viewMode);
@@ -440,7 +589,7 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
     };
 
     return () => {
-      clearTimeout(fitTimer1);
+      if (fitTimer1) clearTimeout(fitTimer1);
       clearTimeout(fitTimer2);
       window.removeEventListener("mouseup", endDrag);
       unsubStore();

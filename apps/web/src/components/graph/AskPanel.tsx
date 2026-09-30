@@ -1,6 +1,6 @@
 "use client";
 
-/** GraphRAG 问答面板：图检索 + LLM 生成，答案高亮图谱子图。 */
+/** GraphRAG 问答面板：桌面浮窗（FAB），移动端底部抽屉。答案高亮图谱子图。 */
 
 import { useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
@@ -15,7 +15,8 @@ interface QA {
 }
 
 export function AskPanel() {
-  const store = useGraphView();
+  const askOpen = useGraphView((s) => s.askOpen);
+  const setAskOpen = useGraphView((s) => s.setAskOpen);
   const [input, setInput] = useState("");
   const [history, setHistory] = useState<QA[]>([]);
   const listRef = useRef<HTMLDivElement>(null);
@@ -24,22 +25,26 @@ export function AskPanel() {
     mutationFn: (question: string) => api.ask(question),
     onSuccess: (a, question) => {
       setHistory((h) => [...h, { q: question, a }]);
+      const gs = useGraphView.getState();
       if (a.subgraph?.nodes.length) {
-        store.setAskIds(a.subgraph.nodes.filter((n) => n.kind === "character").map((n) => n.id));
-        if (a.subgraph.nodes[0]) store.focus(a.subgraph.nodes[0].id);
+        gs.setAskIds(a.subgraph.nodes.filter((n) => n.kind === "character").map((n) => n.id));
+        if (a.subgraph.nodes[0]) gs.focus(a.subgraph.nodes[0].id);
       }
       setTimeout(() => listRef.current?.scrollTo({ top: 999999, behavior: "smooth" }), 50);
     },
     onError: (e) => {
-      setHistory((h) => [...h, { q: input, a: { answer: `调用失败：${(e as Error).message.slice(0, 100)}`, citations: [], subgraph: null, engine: "error" } }]);
+      setHistory((h) => [
+        ...h,
+        { q: input, a: { answer: `调用失败：${(e as Error).message.slice(0, 100)}`, citations: [], subgraph: null, engine: "error" } },
+      ]);
     },
   });
 
-  if (!store.askOpen) {
+  if (!askOpen) {
     return (
       <button
-        onClick={() => store.setAskOpen(true)}
-        className="pointer-events-auto absolute bottom-4 right-4 z-20 flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-sky-600 px-4 py-2.5 text-sm font-medium shadow-lg shadow-violet-900/40 hover:brightness-110"
+        onClick={() => setAskOpen(true)}
+        className="pointer-events-auto absolute bottom-4 right-4 z-20 hidden items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-sky-600 px-4 py-2.5 text-sm font-medium shadow-lg shadow-violet-900/40 transition-transform hover:scale-105 md:flex"
       >
         <Sparkles size={16} />
         问问图谱
@@ -48,23 +53,23 @@ export function AskPanel() {
   }
 
   return (
-    <div className="pointer-events-auto absolute bottom-3 right-3 z-30 flex h-[440px] w-[360px] flex-col rounded-xl border border-zinc-800 bg-zinc-950/97 shadow-2xl backdrop-blur">
+    <div className="pointer-events-auto fixed inset-x-0 bottom-0 z-40 flex h-[72vh] flex-col rounded-t-2xl border-t border-zinc-700 bg-zinc-950/98 shadow-2xl md:inset-auto md:bottom-3 md:right-3 md:h-[440px] md:w-[360px] md:rounded-2xl md:border md:border-zinc-800 md:bg-zinc-950/97 md:backdrop-blur">
       <div className="flex items-center justify-between border-b border-zinc-800 px-3 py-2.5">
         <div className="flex items-center gap-1.5 text-sm font-semibold">
           <Bot size={15} className="text-violet-400" />
-          GraphRAG 问答
-          <span className="text-[10px] font-normal text-zinc-500">图检索 + LLM</span>
+          问问图谱
+          <span className="text-[10px] font-normal text-zinc-500">图检索 + AI</span>
         </div>
         <div className="flex items-center gap-2">
-          {store.askIds && (
+          {useGraphView.getState().askIds && (
             <button
-              onClick={() => store.setAskIds(null)}
+              onClick={() => useGraphView.getState().setAskIds(null)}
               className="text-[11px] text-zinc-500 hover:text-zinc-300"
             >
               清除高亮
             </button>
           )}
-          <button onClick={() => store.setAskOpen(false)} className="text-zinc-500 hover:text-zinc-200">
+          <button onClick={() => setAskOpen(false)} className="text-zinc-500 hover:text-zinc-200" aria-label="关闭">
             <X size={15} />
           </button>
         </div>
@@ -78,7 +83,7 @@ export function AskPanel() {
               <button
                 key={s}
                 onClick={() => ask.mutate(s)}
-                className="block w-full rounded-md border border-zinc-800 bg-zinc-900 px-2.5 py-1.5 text-left text-zinc-300 hover:border-violet-600/50"
+                className="block w-full rounded-lg border border-zinc-800 bg-zinc-900 px-2.5 py-1.5 text-left text-zinc-300 hover:border-violet-600/50"
               >
                 {s}
               </button>
@@ -91,14 +96,14 @@ export function AskPanel() {
             <div className="max-w-[92%] whitespace-pre-wrap rounded-lg border border-zinc-800 bg-zinc-900 px-2.5 py-2 leading-relaxed text-zinc-200">
               {a.answer}
               {a.engine === "graph" && (
-                <span className="mt-1.5 block text-[10px] text-zinc-500">· 纯图检索回答（配置 LLM Key 后升级为生成式回答）</span>
+                <span className="mt-1.5 block text-[10px] text-zinc-500">· 纯图检索回答（配置 LLM 后升级为生成式回答）</span>
               )}
               {a.citations.length > 0 && (
                 <div className="mt-1.5 flex flex-wrap gap-1">
                   {a.citations.slice(0, 10).map((c) => (
                     <button
                       key={c.id + c.relation}
-                      onClick={() => store.select(c.id)}
+                      onClick={() => useGraphView.getState().select(c.id)}
                       className="rounded-full bg-zinc-800 px-2 py-0.5 text-[10px] text-zinc-300 hover:bg-zinc-700"
                     >
                       {c.name}
@@ -119,18 +124,18 @@ export function AskPanel() {
           ask.mutate(input.trim());
           setInput("");
         }}
-        className="flex gap-2 border-t border-zinc-800 p-2.5"
+        className="flex gap-2 border-t border-zinc-800 p-2.5 pb-[calc(0.625rem+env(safe-area-inset-bottom))] md:pb-2.5"
       >
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="问点神话八卦…"
-          className="flex-1 rounded-md border border-zinc-800 bg-zinc-900 px-2.5 py-2 text-sm outline-none placeholder:text-zinc-600 focus:border-violet-500/50"
+          className="flex-1 rounded-lg border border-zinc-800 bg-zinc-900 px-2.5 py-2 text-sm outline-none placeholder:text-zinc-600 focus:border-violet-500/50"
         />
         <button
           type="submit"
           disabled={ask.isPending}
-          className="rounded-md bg-violet-600 px-3 hover:bg-violet-500 disabled:opacity-50"
+          className="rounded-lg bg-violet-600 px-3.5 hover:bg-violet-500 disabled:opacity-50"
         >
           <Send size={15} />
         </button>

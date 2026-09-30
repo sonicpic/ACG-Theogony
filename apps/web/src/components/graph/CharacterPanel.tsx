@@ -29,7 +29,7 @@ export function CharacterPanel() {
   if (!selectedId) return null;
 
   return (
-    <div className="fade-up pointer-events-auto absolute bottom-3 left-3 z-20 max-h-[55%] w-[340px] overflow-y-auto rounded-xl border border-zinc-800 bg-zinc-950/97 p-4 shadow-2xl backdrop-blur">
+    <div className="fade-up pointer-events-auto fixed inset-x-0 bottom-0 z-30 max-h-[62vh] overflow-y-auto rounded-t-2xl border-t border-zinc-700 bg-zinc-950/98 p-4 pb-24 shadow-2xl md:inset-auto md:bottom-3 md:left-3 md:max-h-[55%] md:w-[340px] md:rounded-xl md:border md:border-zinc-800 md:bg-zinc-950/97 md:p-4 md:pb-4 md:backdrop-blur">
       <div className="flex items-start gap-3">
         {char?.imageUrl && (
           // eslint-disable-next-line @next/next/no-img-element

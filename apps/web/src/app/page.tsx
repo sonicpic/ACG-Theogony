@@ -1,6 +1,6 @@
 "use client";
 
-/** 主页：全局图谱探索器。 */
+/** 主页：全局图谱探索器（桌面浮动面板 + 移动端 Dock 抽屉 + 首访引导）。 */
 
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
@@ -9,6 +9,9 @@ import { ControlPanel } from "@/components/graph/ControlPanel";
 import { PathFinder } from "@/components/graph/PathFinder";
 import { AskPanel } from "@/components/graph/AskPanel";
 import { CharacterPanel } from "@/components/graph/CharacterPanel";
+import { TourGuide, HelpFab } from "@/components/graph/TourGuide";
+import { BottomDock } from "@/components/graph/BottomDock";
+import { Toast } from "@/components/graph/Toast";
 import { useGraphView } from "@/lib/store";
 
 // WebGL 组件只能在客户端加载（SSR 无 WebGL 上下文）
@@ -21,6 +24,7 @@ const Graph3D = dynamic(() => import("@/components/graph/Graph3D"), { ssr: false
 export default function GraphExplorerPage() {
   const { data, isLoading, error } = useGraphQuery();
   const store = useGraphView();
+  const tourOpen = useGraphView((s) => s.tourOpen);
 
   // 客户端筛选（全量数据一次拉取，交互零延迟）
   const filtered = useMemo(() => {
@@ -84,18 +88,31 @@ export default function GraphExplorerPage() {
         {store.viewMode === "3d" ? <Graph3D data={filtered} /> : <SigmaGraph data={filtered} />}
       </div>
 
+      {/* 桌面面板 */}
       <ControlPanel data={data} />
       <PathFinder data={data} />
       <CharacterPanel />
       <AskPanel />
+      <HelpFab onClick={() => store.setTourOpen(true)} />
 
-      {/* 底部统计条 */}
-      <div className="pointer-events-none absolute bottom-3 left-1/2 z-10 -translate-x-1/2 rounded-full border border-zinc-800 bg-zinc-950/90 px-4 py-1.5 text-xs text-zinc-400 backdrop-blur">
-        角色 <span className="font-semibold text-sky-400">{stats?.characters}</span> · 体系{" "}
-        <span className="font-semibold text-emerald-400">{stats?.myths}</span> · 关系{" "}
-        <span className="font-semibold text-amber-400">{stats?.links}</span>
-        <span className="ml-2 text-zinc-600">点击节点看邻居 · 点边找路径</span>
-      </div>
+      {/* 移动端 Dock + 抽屉 */}
+      <BottomDock />
+
+      {/* 首访引导 */}
+      <TourGuide open={tourOpen} onClose={() => store.setTourOpen(false)} />
+
+      {/* 全局轻提示 */}
+      <Toast />
+
+      {/* 底部统计条（桌面） */}
+      {stats && (
+        <div className="pointer-events-none absolute bottom-3 left-1/2 z-10 hidden -translate-x-1/2 rounded-full border border-zinc-800 bg-zinc-950/90 px-4 py-1.5 text-xs text-zinc-400 backdrop-blur md:block">
+          角色 <span className="font-semibold text-sky-400">{stats.characters}</span> · 体系{" "}
+          <span className="font-semibold text-emerald-400">{stats.myths}</span> · 关系{" "}
+          <span className="font-semibold text-amber-400">{stats.links}</span>
+          <span className="ml-2 text-zinc-600">点击节点看邻居 · 点边找路径 · 拖拽节点</span>
+        </div>
+      )}
     </main>
   );
 }

@@ -1,15 +1,14 @@
 "use client";
 
-/** 路径探索（六度分隔）：双角色选择 + BFS 最短关系路径展示。 */
+/** 关系路径探索（六度分隔）：PathContent 供桌面卡与移动抽屉复用。 */
 
 import { useMemo, useState } from "react";
-import { Route, X } from "lucide-react";
+import { ChevronDown, Route, X } from "lucide-react";
 import { api } from "@/lib/api";
-import { relLabel } from "@/lib/constants";
 import type { GraphDTO, PathDTO } from "@/lib/types";
 import { useGraphView } from "@/lib/store";
 
-export function PathFinder({ data }: { data: GraphDTO }) {
+export function PathContent({ data }: { data: GraphDTO }) {
   const store = useGraphView();
   const [fromName, setFromName] = useState("");
   const [toName, setToName] = useState("");
@@ -53,25 +52,21 @@ export function PathFinder({ data }: { data: GraphDTO }) {
   }
 
   return (
-    <div className="pointer-events-auto absolute right-3 top-3 z-20 w-[300px] rounded-xl border border-zinc-800 bg-zinc-950/95 p-3 shadow-2xl backdrop-blur">
-      <div className="mb-2 flex items-center gap-1.5 text-sm font-semibold">
-        <Route size={14} className="text-emerald-400" />
-        关系路径探索
-      </div>
+    <div>
       <form onSubmit={find} className="space-y-2">
         <input
           value={fromName}
           onChange={(e) => setFromName(e.target.value)}
           placeholder="起点角色（如 吉尔伽美什）"
           list="path-characters"
-          className="w-full rounded-md border border-zinc-800 bg-zinc-900 px-2.5 py-1.5 text-sm outline-none placeholder:text-zinc-600 focus:border-emerald-500/50"
+          className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-2.5 py-2 text-sm outline-none placeholder:text-zinc-600 focus:border-emerald-500/50"
         />
         <input
           value={toName}
           onChange={(e) => setToName(e.target.value)}
           placeholder="终点角色（如 项羽）"
           list="path-characters"
-          className="w-full rounded-md border border-zinc-800 bg-zinc-900 px-2.5 py-1.5 text-sm outline-none placeholder:text-zinc-600 focus:border-emerald-500/50"
+          className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-2.5 py-2 text-sm outline-none placeholder:text-zinc-600 focus:border-emerald-500/50"
         />
         <datalist id="path-characters">
           {charNodes.slice(0, 200).map((n) => (
@@ -81,7 +76,7 @@ export function PathFinder({ data }: { data: GraphDTO }) {
         <button
           type="submit"
           disabled={busy}
-          className="w-full rounded-md bg-emerald-600/80 py-1.5 text-sm font-medium hover:bg-emerald-500 disabled:opacity-50"
+          className="w-full rounded-lg bg-emerald-600/80 py-2 text-sm font-medium hover:bg-emerald-500 disabled:opacity-50"
         >
           {busy ? "探索中…" : "找到 TA 们的关系"}
         </button>
@@ -98,7 +93,7 @@ export function PathFinder({ data }: { data: GraphDTO }) {
               </div>
               <ol className="mt-2 space-y-1 text-xs">
                 {result.nodes.map((n, i) => (
-                  <li key={n.id} className="flex items-center gap-1.5">
+                  <li key={n.id} className="flex flex-wrap items-center gap-1.5">
                     <button
                       onClick={() => store.select(n.id)}
                       className="rounded px-1 py-0.5 text-sky-300 hover:bg-sky-500/10"
@@ -113,7 +108,7 @@ export function PathFinder({ data }: { data: GraphDTO }) {
               </ol>
             </>
           ) : (
-            <p className="text-xs text-zinc-500">两人在已审核关系图中不连通（可能需要先挖掘更多关系，或走审核队列）。</p>
+            <p className="text-xs text-zinc-500">两人在已审核关系图中不连通（可等 LLM 挖掘更多关系后重试）。</p>
           )}
           <button
             onClick={() => {
@@ -130,6 +125,26 @@ export function PathFinder({ data }: { data: GraphDTO }) {
   );
 }
 
-export function relabel(type: string) {
-  return relLabel(type);
+/** 桌面版折叠卡：开合状态走 store（点边时自动展开） */
+export function PathFinder({ data }: { data: GraphDTO }) {
+  const open = useGraphView((s) => s.pathPanelOpen);
+  const setOpen = useGraphView((s) => s.setPathPanelOpen);
+  return (
+    <div className="pointer-events-auto absolute right-3 top-3 z-20 hidden w-[300px] overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950/95 shadow-2xl backdrop-blur md:block">
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex w-full items-center justify-between px-3 py-2.5 text-sm font-semibold hover:text-sky-300"
+      >
+        <span className="flex items-center gap-1.5">
+          <Route size={14} className="text-emerald-400" /> 关系路径探索
+        </span>
+        <ChevronDown size={14} className={`text-zinc-500 transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open && (
+        <div className="border-t border-zinc-800 p-3">
+          <PathContent data={data} />
+        </div>
+      )}
+    </div>
+  );
 }
