@@ -12,6 +12,7 @@ import { CharacterPanel } from "@/components/graph/CharacterPanel";
 import { TourGuide, HelpFab } from "@/components/graph/TourGuide";
 import { BottomDock } from "@/components/graph/BottomDock";
 import { Toast } from "@/components/graph/Toast";
+import { FloatingActions } from "@/components/graph/FloatingActions";
 import { useGraphView } from "@/lib/store";
 
 // WebGL 组件只能在客户端加载（SSR 无 WebGL 上下文）
@@ -97,6 +98,9 @@ export default function GraphExplorerPage() {
 
       {/* 移动端 Dock + 抽屉 */}
       <BottomDock />
+
+      {/* 取消高亮 / 重置视图 */}
+      <FloatingActions />
 
       {/* 首访引导 */}
       <TourGuide open={tourOpen} onClose={() => store.setTourOpen(false)} />

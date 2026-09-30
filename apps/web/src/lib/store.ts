@@ -25,6 +25,8 @@ interface GraphViewState {
   hoveredId: string | null;
   focusId: string | null; // 触发相机聚焦
   focusNonce: number; // 显式定位计数（区分点选与定位）
+  cancelFocusNonce: number; // 取消高亮计数（触发布局恢复浮动）
+  resetViewNonce: number; // 重置视图计数（恢复初始全景）
   askIds: string[] | null; // RAG 子图高亮
   // 路径探索
   pathFrom: string | null;
@@ -51,6 +53,8 @@ interface GraphViewState {
   select(id: string | null): void;
   hover(id: string | null): void;
   focus(id: string | null): void;
+  cancelFocus(): void;
+  resetView(): void;
   setAskIds(ids: string[] | null): void;
   setPath(from: string | null, to: string | null, result?: PathDTO | null): void;
   setAskOpen(open: boolean): void;
@@ -76,6 +80,8 @@ export const useGraphView = create<GraphViewState>((set) => ({
   hoveredId: null,
   focusId: null,
   focusNonce: 0,
+  cancelFocusNonce: 0,
+  resetViewNonce: 0,
   askIds: null,
   pathFrom: null,
   pathTo: null,
@@ -105,6 +111,26 @@ export const useGraphView = create<GraphViewState>((set) => ({
   select: (id) => set({ selectedId: id, focusId: id }),
   hover: (id) => set({ hoveredId: id }),
   focus: (id) => set((s) => ({ focusId: id, focusNonce: s.focusNonce + 1 })),
+  cancelFocus: () =>
+    set((s) => ({
+      selectedId: null,
+      focusId: null,
+      pathFrom: null,
+      pathTo: null,
+      pathResult: null,
+      askIds: [],
+      cancelFocusNonce: s.cancelFocusNonce + 1,
+    })),
+  resetView: () =>
+    set((s) => ({
+      selectedId: null,
+      focusId: null,
+      pathFrom: null,
+      pathTo: null,
+      pathResult: null,
+      askIds: [],
+      resetViewNonce: s.resetViewNonce + 1,
+    })),
   setAskIds: (ids) => set({ askIds: ids }),
   setPath: (from, to, result = null) => set({ pathFrom: from, pathTo: to, pathResult: result }),
   setAskOpen: (open) => set({ askOpen: open }),

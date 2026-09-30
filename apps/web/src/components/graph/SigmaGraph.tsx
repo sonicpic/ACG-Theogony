@@ -18,7 +18,7 @@ import EdgeCurveProgram from "@sigma/edge-curve";
 import { api } from "@/lib/api";
 import type { GraphDTO, GraphNode } from "@/lib/types";
 import { imgProxy } from "@/lib/types";
-import { CLUSTER_PALETTE, MYTH_NODE_COLOR, mythColor, relColor } from "@/lib/constants";
+import { CLUSTER_PALETTE, MYTH_NODE_COLOR, RELATION_META, mythColor, relColor } from "@/lib/constants";
 import { highlightSets, useGraphView } from "@/lib/store";
 
 // ──────────────────────────────────────────────
@@ -26,6 +26,11 @@ import { highlightSets, useGraphView } from "@/lib/store";
 // ──────────────────────────────────────────────
 
 const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
+/** 悬停浮卡：节点卡 或 边关系卡 */
+type HoverTooltip =
+  | { x: number; y: number; node: GraphNode; edge?: undefined }
+  | { x: number; y: number; edge: { label: string; from: string; to: string }; node?: undefined };
 
 // 布局静置后的位置缓存：重建 Sigma 时复用（保证拾取与坐标系一致）
 const settledPositions = new Map<string, { x: number; y: number }>();
@@ -135,7 +140,7 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
   const viewModeRef = useRef<string>("force");
   const tooltipLiveRef = useRef(false);
 
-  const [tooltip, setTooltip] = useState<{ x: number; y: number; node: GraphNode } | null>(null);
+  const [tooltip, setTooltip] = useState<HoverTooltip | null>(null);
 
   const clusterColor = useMemo(() => {
     const map = new Map<string, string>();
@@ -183,6 +188,7 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
           color: link.type === "BELONGS_TO" ? "#1c2130" : relColor(link.type),
           size: link.type === "BELONGS_TO" ? 0.5 : 1.5,
           curvature: link.type === "BELONGS_TO" ? 0.5 : 0.2,
+          relLabel: link.type === "BELONGS_TO" ? "归属" : RELATION_META[link.type]?.label || link.type,
         });
       } catch {
         /* 平行边忽略 */
@@ -241,6 +247,9 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
       const startedAt = performance.now();
       const tick = () => {
         forceAtlas2.assign(graph, { iterations: 2, settings: { ...FA2_SETTINGS } });
+        // 每帧锚定全局尺度：FA2 会寻求更大的自然平衡尺寸（紧凑态重启会膨胀数倍），
+        // 归一化让节点相对浮动而整体大小/视图稳定。
+        normalizePositions();
         const elapsed = performance.now() - startedAt;
         if (elapsed < (autoStopMs ?? 15000) && !userTookOver) {
           layoutRafRef.current = requestAnimationFrame(tick);
@@ -275,7 +284,7 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
       startLayout(16000);
     }
 
-    const fitTimer1 = stableMode ? undefined : window.setTimeout(() => fitCamera(1100, false), 2400);
+    const fitTimer1 = stableMode ? undefined : window.setTimeout(() => fitCamera(1100), 2400);
     const fitTimer2 = window.setTimeout(() => {
       if (!stableMode && viewModeRef.current === "force") {
         stopLayout();
@@ -362,9 +371,28 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
     const store = useGraphView;
     let dragNode: string | null = null;
     let pointerPos = { x: 0, y: 0 };
+    // 拖动/点击区分：累计拖动像素，超阈值则抑制随后的 click（拖动不改高亮）
+    let dragStart: { x: number; y: number } | null = null;
+    let dragMovedPx = 0;
+    let suppressClickUntil = 0;
+    // 边悬停提示：悬停 2s 后才显示，避免掠过时标签乱跳
+    let edgeTipTimer: number | undefined;
+    // 触屏判定：主输入为粗指针（手机/平板）时，不截获 down 事件 → 双指缩放/平移交给 sigma 原生
+    const coarsePointer = typeof window !== "undefined" && window.matchMedia?.("(pointer: coarse)").matches;
 
-    /** 数学最近邻命中测试：WebGL 拾取在部分环境不可靠时的全平台兜底 */
-    const hitTest = (px: number, py: number): string | null => {
+    /** 高亮门控：选中/路径/问答态下，仅高亮集合（本体+邻居+路径+RAG）内节点可交互 */
+    const isInteractable = (node: string): boolean => {
+      const state = store.getState();
+      if (!state.selectedId && !state.pathResult?.found && !state.askIds?.length) return true;
+      if (state.selectedId === node) return true;
+      const { primary, secondary } = highlightSets(state);
+      if (primary.has(node) || secondary.has(node)) return true;
+      const nb = neighborIds(graph, state.selectedId);
+      return !!nb?.has(node);
+    };
+
+    /** 数学最近邻命中测试（原始，不设门控）：WebGL 拾取在部分环境不可靠时的全平台兜底 */
+    const hitTestAny = (px: number, py: number): string | null => {
       let best: string | null = null;
       let bestD = Infinity;
       graph.forEachNode((n, a) => {
@@ -377,6 +405,11 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
         }
       });
       return best;
+    };
+    /** 门控版：高亮态下只返回可交互节点 */
+    const hitTest = (px: number, py: number): string | null => {
+      const hit = hitTestAny(px, py);
+      return hit && isInteractable(hit) ? hit : null;
     };
 
     /** graphToViewport 的归一化矩阵在重建后是未初始化状态（所有点坍缩到中心）；
@@ -394,24 +427,29 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
       store.getState().select(node);
     };
 
-    const beginDrag = (node: string) => {
+    const beginDrag = (node: string, x: number, y: number) => {
       dragNode = node;
+      dragStart = { x, y };
+      dragMovedPx = 0;
       graph.setNodeAttribute(node, "fixed", true);
       stopLayout(); // 用户接管布局
       containerRef.current!.style.cursor = "grabbing";
     };
 
     sigma.on("downNode", ({ node, event }) => {
+      if (coarsePointer) return; // 触屏：down 不截获，双指缩放/平移交给 sigma 原生；tap 由 clickNode 承担
+      if (!isInteractable(node)) return; // 高亮态下灰点不可拖
       event.preventSigmaDefault();
-      beginDrag(node);
+      beginDrag(node, event.x, event.y);
     });
     sigma.on("downStage", ({ event }) => {
+      if (coarsePointer) return;
       if (!matrixWarmed) {
         warmMatrix();
         return; // 首次交互只暖矩阵；拖拽由 downNode 原生路径承担
       }
       const hit = hitTest(event.x, event.y);
-      if (hit) beginDrag(hit);
+      if (hit) beginDrag(hit, event.x, event.y);
     });
 
     let lastHoverProbe = 0;
@@ -422,11 +460,15 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
       }
       if (dragNode) {
         e.preventSigmaDefault();
+        if (dragStart) {
+          dragMovedPx = Math.max(dragMovedPx, Math.hypot(e.event.x - dragStart.x, e.event.y - dragStart.y));
+        }
         const p = sigma.viewportToGraph({ x: e.event.x, y: e.event.y });
         graph.setNodeAttribute(dragNode, "x", p.x);
         graph.setNodeAttribute(dragNode, "y", p.y);
         return;
       }
+      if (coarsePointer) return; // 触屏无悬停概念
       // 悬停兜底（节流 80ms）：原生 enterNode 失效时用命中测试
       const now = performance.now();
       if (now - lastHoverProbe > 80) {
@@ -440,7 +482,9 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
           const attrs = graph.getNodeAttributes(hit) as { nodeData: GraphNode };
           tooltipLiveRef.current = true;
           setTooltip((t) =>
-            t && t.node.id === hit ? { ...t, x: e.event.x, y: e.event.y } : { x: e.event.x, y: e.event.y, node: attrs.nodeData }
+            t && t.node && t.node.id === hit
+              ? { ...t, x: e.event.x, y: e.event.y }
+              : { x: e.event.x, y: e.event.y, node: attrs.nodeData }
           );
           containerRef.current!.style.cursor = "grab";
         } else if (tooltipLiveRef.current) {
@@ -454,7 +498,9 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
     const endDrag = () => {
       if (dragNode) {
         graph.removeNodeAttribute(dragNode, "fixed");
+        if (dragMovedPx > 5) suppressClickUntil = performance.now() + 400; // 拖动 ≠ 点击：不改高亮
         dragNode = null;
+        dragStart = null;
         containerRef.current!.style.cursor = "grab";
       }
     };
@@ -468,22 +514,26 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
 
     sigma.on("clickNode", ({ node }) => {
       cancelAutoFit();
+      if (performance.now() < suppressClickUntil) return; // 刚拖完：忽略，保持高亮
+      if (!isInteractable(node)) return; // 高亮态下灰点不可点
       setTooltip(null);
       tooltipLiveRef.current = false;
       selectNode(node);
     });
     sigma.on("clickStage", ({ event }) => {
       cancelAutoFit();
+      if (performance.now() < suppressClickUntil) return; // 刚拖完空白：这是平移，不是点击
       const px = event.x;
       const py = event.y;
       const finish = () => {
-        const hit = hitTest(px, py);
-        if (hit) {
-          selectNode(hit);
+        const raw = hitTestAny(px, py);
+        if (raw) {
+          if (isInteractable(raw)) selectNode(raw);
+          // else：命中高亮态下的灰点 → 完全忽略（点击灰点既不选中也不取消高亮）
         } else {
           tooltipLiveRef.current = false;
           setTooltip(null);
-          store.getState().select(null);
+          store.getState().select(null); // 真空白点击才取消
         }
       };
       if (!matrixWarmed) {
@@ -494,6 +544,11 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
       }
     });
     sigma.on("enterNode", ({ node }) => {
+      if (edgeTipTimer) {
+        clearTimeout(edgeTipTimer);
+        edgeTipTimer = undefined;
+      }
+      if (coarsePointer) return; // 触屏无悬停卡
       containerRef.current!.style.cursor = "grab";
       const attrs = graph.getNodeAttributes(node) as { nodeData: GraphNode };
       tooltipLiveRef.current = true;
@@ -526,10 +581,27 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
     sigma.on("enterEdge", ({ edge }) => {
       hoverEdgeRef.current = edge;
       sigma.refresh();
+      if (coarsePointer) return; // 触屏无悬停
+      if (edgeTipTimer) clearTimeout(edgeTipTimer);
+      edgeTipTimer = window.setTimeout(() => {
+        edgeTipTimer = undefined;
+        const [s2, t2] = graph.extremities(edge);
+        const label = (graph.getEdgeAttributes(edge) as { relLabel?: string }).relLabel || "关系";
+        const from = (graph.getNodeAttributes(s2) as { nodeData: GraphNode }).nodeData.name;
+        const to = (graph.getNodeAttributes(t2) as { nodeData: GraphNode }).nodeData.name;
+        tooltipLiveRef.current = true;
+        setTooltip({ x: pointerPos.x, y: pointerPos.y, edge: { label, from, to } });
+      }, 2000); // 悬停 2s 才显示，鼠标掠过不跳
     });
     sigma.on("leaveEdge", () => {
       hoverEdgeRef.current = null;
       sigma.refresh();
+      if (edgeTipTimer) {
+        clearTimeout(edgeTipTimer);
+        edgeTipTimer = undefined;
+      }
+      setTooltip((t) => (t && t.edge ? null : t)); // 只清边提示
+      tooltipLiveRef.current = false;
     });
 
     // ── 高亮 reducer（一次性注册；内部实时读 store）──
@@ -577,6 +649,30 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
           void centerOnGraphPoint(attrs.x, attrs.y);
         }
       }
+      // 取消高亮：力导向模式恢复活布局（节点重新浮动）
+      if (state.cancelFocusNonce !== prev.cancelFocusNonce) {
+        if (viewModeRef.current === "force") startLayout(8000);
+      }
+      // 重置视图：恢复静置布局 + 归一化 + 相机回中心全景
+      if (state.resetViewNonce !== prev.resetViewNonce) {
+        const restore = viewModeRef.current === "geo" ? galaxyPositions(data) : settledPositions;
+        if (restore.size) {
+          graph.forEachNode((n) => {
+            const pos = restore.get(n);
+            if (pos) {
+              graph.setNodeAttribute(n, "x", pos.x);
+              graph.setNodeAttribute(n, "y", pos.y);
+            }
+          });
+        }
+        normalizePositions();
+        void sigma.getCamera().animate(
+          { x: 0, y: 0, ratio: 1.02 },
+          { duration: 700, easing: (t) => easeInOutCubic(t) }
+        );
+        if (viewModeRef.current === "force") startLayout(8000);
+        sigma.refresh();
+      }
       if (state.viewMode !== prev.viewMode) void morphLayout(state.viewMode);
       if (state.colorBy !== prev.colorBy) recolor(state.colorBy);
     });
@@ -615,8 +711,8 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
             "radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0) 58%, rgba(0,0,0,0.4) 100%)",
         }}
       />
-      {/* 悬停浮卡 */}
-      {tooltip && (
+      {/* 悬停浮卡（节点 / 边关系） */}
+      {tooltip && tooltip.node && (
         <div
           className="pointer-events-none fixed z-40 w-56 overflow-hidden rounded-xl border border-zinc-700/80 bg-zinc-950/95 shadow-2xl backdrop-blur"
           style={{
@@ -648,6 +744,24 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
                 <span className="text-zinc-500">· {tooltip.node.degree} 关系</span>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+      {tooltip && tooltip.edge && (
+        <div
+          className="pointer-events-none fixed z-40 rounded-xl border border-zinc-700/80 bg-zinc-950/95 px-3 py-2 shadow-2xl backdrop-blur"
+          style={{
+            left: Math.min(tooltip.x + 16, (typeof window !== "undefined" ? window.innerWidth : 1920) - 220),
+            top: Math.min(tooltip.y + 14, (typeof window !== "undefined" ? window.innerHeight : 1080) - 90),
+          }}
+        >
+          <div className="flex items-center gap-2 text-xs">
+            <span className="rounded bg-amber-500/20 px-1.5 py-0.5 font-medium text-amber-300">
+              {tooltip.edge.label}
+            </span>
+            <span className="text-zinc-300">{tooltip.edge.from}</span>
+            <span className="text-zinc-500">↔</span>
+            <span className="text-zinc-300">{tooltip.edge.to}</span>
           </div>
         </div>
       )}
