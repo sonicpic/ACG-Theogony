@@ -117,7 +117,7 @@ export default function GraphExplorerPage() {
           角色 <span className="font-semibold text-sky-400">{stats.characters}</span> · 体系{" "}
           <span className="font-semibold text-emerald-400">{stats.myths}</span> · 关系{" "}
           <span className="font-semibold text-amber-400">{stats.links}</span>
-          <span className="ml-2 text-zinc-600">点击节点看邻居 · 点边找路径 · 拖拽节点</span>
+          <span className="ml-2 text-zinc-600">点节点看邻居 · 点边看关系 · 拖拽节点</span>
         </div>
       )}
     </main>

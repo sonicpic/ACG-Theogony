@@ -15,7 +15,6 @@ import Graph from "graphology";
 import forceAtlas2 from "graphology-layout-forceatlas2";
 import Sigma from "sigma";
 import EdgeCurveProgram from "@sigma/edge-curve";
-import { api } from "@/lib/api";
 import type { GraphDTO, GraphNode } from "@/lib/types";
 import { imgProxy } from "@/lib/types";
 import { CLUSTER_PALETTE, MYTH_NODE_COLOR, RELATION_META, mythColor, relColor } from "@/lib/constants";
@@ -540,24 +539,18 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
       tooltipLiveRef.current = false;
       setTooltip(null);
     });
+    /** 边关系浮卡：点击立即显示，悬停 0.8s 显示（掠过不跳） */
+    const showEdgeTooltip = (edge: string) => {
+      const [s2, t2] = graph.extremities(edge);
+      const label = (graph.getEdgeAttributes(edge) as { relLabel?: string }).relLabel || "关系";
+      const from = (graph.getNodeAttributes(s2) as { nodeData: GraphNode }).nodeData.name;
+      const to = (graph.getNodeAttributes(t2) as { nodeData: GraphNode }).nodeData.name;
+      tooltipLiveRef.current = true;
+      setTooltip({ x: pointerPos.x, y: pointerPos.y, edge: { label, from, to } });
+    };
     sigma.on("clickEdge", ({ edge }) => {
       cancelAutoFit();
-      const [s, t] = graph.extremities(edge);
-      store.getState().setPath(s, t, null);
-      // 自动展开路径面板并提示（否则用户不知道发生了什么）
-      if (window.innerWidth < 768) {
-        store.getState().setMobilePanel("path");
-      } else {
-        store.getState().setPathPanelOpen(true);
-      }
-      void api.paths(s, t).then((r) => {
-        store.getState().setPath(s, t, r);
-        const names = graph.getNodeAttributes(s).nodeData as GraphNode;
-        const namet = graph.getNodeAttributes(t).nodeData as GraphNode;
-        store.getState().showToast(
-          r.found ? `${names.name} → ${namet.name}：${r.distance} 步` : `${names.name} 与 ${namet.name} 不连通`
-        );
-      });
+      showEdgeTooltip(edge); // 点边 = 立即看这条关系是什么
     });
     sigma.on("enterEdge", ({ edge }) => {
       hoverEdgeRef.current = edge;
@@ -566,13 +559,8 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
       if (edgeTipTimer) clearTimeout(edgeTipTimer);
       edgeTipTimer = window.setTimeout(() => {
         edgeTipTimer = undefined;
-        const [s2, t2] = graph.extremities(edge);
-        const label = (graph.getEdgeAttributes(edge) as { relLabel?: string }).relLabel || "关系";
-        const from = (graph.getNodeAttributes(s2) as { nodeData: GraphNode }).nodeData.name;
-        const to = (graph.getNodeAttributes(t2) as { nodeData: GraphNode }).nodeData.name;
-        tooltipLiveRef.current = true;
-        setTooltip({ x: pointerPos.x, y: pointerPos.y, edge: { label, from, to } });
-      }, 2000); // 悬停 2s 才显示，鼠标掠过不跳
+        showEdgeTooltip(edge);
+      }, 800);
     });
     sigma.on("leaveEdge", () => {
       hoverEdgeRef.current = null;
