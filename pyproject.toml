@@ -16,6 +16,7 @@ dependencies = [
     "lxml>=5.3",
     "pypinyin>=0.53",
     "networkx>=3.4",
+    "opencc-python-reimplemented>=0.1.7",
 ]
 
 [dependency-groups]
