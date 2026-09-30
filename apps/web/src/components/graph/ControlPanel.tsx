@@ -265,7 +265,7 @@ export function ControlPanel({ data }: { data: GraphDTO }) {
     const res = await api.search(query.trim(), 5);
     if (res.hits.length) {
       store.select(res.hits[0].character.id);
-      store.focus(res.hits[0].character.id); // 显式定位：平移居中
+      store.focus(res.hits[0].character.id); // 显式定位：缩放回全景，目标在图中高亮
       setNlqNote("");
     } else {
       setNlqNote("没有找到相关角色");

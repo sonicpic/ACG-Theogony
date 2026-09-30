@@ -136,7 +136,6 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
   const layoutRafRef = useRef<number | null>(null);
   const rafRef = useRef<number | null>(null);
   const hoverEdgeRef = useRef<string | null>(null);
-  const centeringRef = useRef(false);
   const viewModeRef = useRef<string>("force");
   const tooltipLiveRef = useRef(false);
 
@@ -313,28 +312,6 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
         };
         rafRef.current = requestAnimationFrame(step);
       });
-    }
-
-    /** 相机聚焦：目标图坐标 → 屏幕像素 → 归一化取景坐标（相机语义），飞向目标并轻微放大。
-     *  依赖 graphToViewport（矩阵须已暖；显式定位时用户已交互过）。 */
-    async function centerOnGraphPoint(gx: number, gy: number, duration = 650) {
-      if (centeringRef.current) return;
-      centeringRef.current = true;
-      try {
-        if (!matrixWarmed) {
-          sigma.refresh();
-          await new Promise((r) => requestAnimationFrame(r));
-        }
-        const el = containerRef.current!;
-        const p = sigma.graphToViewport({ x: gx, y: gy });
-        const cam = sigma.getCamera();
-        await cam.animate(
-          { x: p.x / el.clientWidth, y: p.y / el.clientHeight, ratio: Math.min(cam.ratio, 0.72) },
-          { duration, easing: (t) => easeInOutCubic(t) }
-        );
-      } finally {
-        centeringRef.current = false;
-      }
     }
 
     async function morphLayout(mode: string) {
@@ -646,12 +623,14 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
       ) {
         sigma.refresh();
       }
-      // 平移居中只服务显式定位（focus() 触发 nonce）；普通点选不挪画面，保持视图稳定
+      // 显式定位（focus() 触发 nonce）：相机只做"缩放回全景"（位置恒在中心，坐标换算零风险），
+      // 高亮的目标节点在全景中醒目可见；普通点选完全不挪画面
       if (state.focusNonce !== prev.focusNonce && state.focusId) {
-        const attrs = graph.getNodeAttributes(state.focusId);
-        if (Number.isFinite(attrs.x)) {
-          void centerOnGraphPoint(attrs.x, attrs.y);
-        }
+        const cam = sigma.getCamera();
+        void cam.animate(
+          { x: 0.5, y: 0.5, ratio: Math.max(cam.ratio, 1.02) },
+          { duration: 500, easing: (t) => easeInOutCubic(t) }
+        );
       }
       // 取消高亮：力导向模式恢复活布局（节点重新浮动）
       if (state.cancelFocusNonce !== prev.cancelFocusNonce) {

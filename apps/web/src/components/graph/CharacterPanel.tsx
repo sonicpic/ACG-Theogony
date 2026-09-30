@@ -12,7 +12,6 @@ import { useGraphView } from "@/lib/store";
 
 export function CharacterPanel() {
   const selectedId = useGraphView((s) => s.selectedId);
-  const focus = useGraphView((s) => s.focus);
   const select = useGraphView((s) => s.select);
 
   const { data: char } = useQuery({
@@ -81,7 +80,11 @@ export function CharacterPanel() {
               return (
                 <button
                   key={r.id}
-                  onClick={() => focus(otherId)}
+                  onClick={() => {
+                    // 选中对方：两人的连线与端点随之高亮，画面不动
+                    select(otherId);
+                    useGraphView.getState().showToast(`已选中 ${otherName} · 与 ${char?.name || ""} 的关系已高亮`);
+                  }}
                   className="rounded-full border px-2 py-0.5 text-[11px] transition-transform hover:scale-105"
                   style={{ borderColor: relColor(r.type), color: relColor(r.type) }}
                   title={r.evidence}
