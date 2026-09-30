@@ -77,7 +77,22 @@ class Work(Base):
     wikidata_qid: Mapped[str | None] = mapped_column(String(32), nullable=True, index=True)
     prototype_qid: Mapped[str | None] = mapped_column(String(32), nullable=True, index=True)  # 基于的原型
     source: Mapped[str] = mapped_column(String(16), default="wikidata")
+    anilist_id: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
     extra: Mapped[dict] = mapped_column(JSON, default=dict)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+
+
+class WorkRelation(Base):
+    """作品间关系（续作/前传/衍生/同人/替代版本等）。"""
+
+    __tablename__ = "work_relations"
+    __table_args__ = (UniqueConstraint("source_id", "target_id", "relation_type", name="uq_workrel"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    source_id: Mapped[str] = mapped_column(String(32), index=True)   # 作品 id（bgw:xxx / ww:xxx）
+    target_id: Mapped[str] = mapped_column(String(32), index=True)
+    relation_type: Mapped[str] = mapped_column(String(24))  # SEQUEL|PREQUEL|SPIN_OFF|ALTERNATIVE|SIDE_STORY|PARENT|CHARACTER|OTHER
+    source: Mapped[str] = mapped_column(String(16), default="anilist")
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
 
 

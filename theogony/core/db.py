@@ -54,6 +54,10 @@ def init_db() -> None:
 def _migrate(conn) -> None:
     """轻量列迁移：create_all 不改已有表，新列在此补齐（幂等）。"""
     cols = {row[1] for row in conn.execute(text("PRAGMA table_info(characters)"))}
+    work_cols = {row[1] for row in conn.execute(text("PRAGMA table_info(works)"))}
+    if "anilist_id" not in work_cols:
+        conn.execute(text("ALTER TABLE works ADD COLUMN anilist_id INTEGER"))
+        conn.execute(text("CREATE INDEX IF NOT EXISTS ix_works_anilist_id ON works(anilist_id)"))
     if "wikidata_qid" not in cols:
         conn.execute(text("ALTER TABLE characters ADD COLUMN wikidata_qid VARCHAR(32)"))
         conn.execute(text("CREATE INDEX IF NOT EXISTS ix_characters_wikidata_qid ON characters(wikidata_qid)"))

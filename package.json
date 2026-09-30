@@ -24,7 +24,8 @@
     "harvest": "python -u -m theogony.pipelines.harvest_prototypes",
     "crawl-corpus": "python -u -m theogony.pipelines.crawl_corpus",
     "bootstrap": "python -u -m theogony.pipelines.bootstrap_relations",
-    "family": "python -u -m theogony.pipelines.harvest_family"
+    "family": "python -u -m theogony.pipelines.harvest_family",
+    "work-relations": "python -u -m theogony.pipelines.harvest_work_relations"
   },
   "devDependencies": {
     "openapi-typescript": "^7.5.0"
