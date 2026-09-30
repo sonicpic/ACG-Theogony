@@ -50,11 +50,20 @@ _WORK_CLASS_RE = re.compile(
 )
 
 
+# 中文音译常见变体折叠（同一人名的不同译法：恺撒/凯撒、阿蒂拉/阿提拉）
+_TRANSLIT_FOLD = str.maketrans({
+    "恺": "凯", "蒂": "提", "佛": "弗", "茨": "兹", "莎": "沙",
+    "娅": "亚", "锹": "乔",
+    "ō": "o", "ū": "u", "ā": "a", "ē": "e", "ī": "i",
+    "ö": "o", "ü": "u", "é": "e", "á": "a",
+})
+
+
 def normalize_name(s: str) -> str:
     s = unicodedata.normalize("NFKC", s or "")
     for ch in " \u3000·・.。'\"''\"·-‐–—_/／（）()〔〕[]":
         s = s.replace(ch, "")
-    return s.lower()
+    return s.lower().translate(_TRANSLIT_FOLD)
 
 
 def _work_kind(class_text: str) -> str:
@@ -133,9 +142,12 @@ async def resolve_seeds(wd: WikidataProvider, seeds: list[dict]) -> list[dict]:
     } - set(claims))
     if target_qids:
         claims.update(await wd.resolve_claims(target_qids))
-    target_desc = await wd.labels_descriptions(target_qids) if target_qids else {}
-    p31_ids = sorted({p for cl in claims.values() for p in cl.get("p31", [])})
-    p31_meta = await wd.labels_descriptions(p31_ids) if p31_ids else {}
+    try:
+        target_desc = await wd.labels_descriptions(target_qids) if target_qids else {}
+        p31_ids = sorted({p for cl in claims.values() for p in cl.get("p31", [])})
+        p31_meta = await wd.labels_descriptions(p31_ids) if p31_ids else {}
+    except Exception:  # 离线：P31 类缺失时神话类判定退化为描述正则
+        target_desc, p31_meta = {}, {}
 
     def norm(x: str) -> str:
         return normalize_name(x)
@@ -179,7 +191,10 @@ async def resolve_seeds(wd: WikidataProvider, seeds: list[dict]) -> list[dict]:
         print(f"[resolve] 未解析: {failed_names[:12]}{'…' if len(failed_names) > 12 else ''}")
 
     proto_qids = sorted({s["prototype_qid"] for s in seeds if s.get("prototype_qid")})
-    meta = await wd.labels_descriptions(proto_qids) if proto_qids else {}
+    try:
+        meta = await wd.labels_descriptions(proto_qids) if proto_qids else {}
+    except Exception:  # 离线重跑：标签查不到就用种子名兜底
+        meta = {}
     for s in seeds:
         if s.get("prototype_qid"):
             m = meta.get(s["prototype_qid"], {})
@@ -202,27 +217,41 @@ async def harvest(wd: WikidataProvider, seeds: list[dict], max_per_proto: int, m
         rec["fgo_ids"].append(s["char_id"])
         rec["prototype_strs"].add(s["char_name"])
 
-    # 批量反查
+    # 批量反查（逐原型缓存 + 离线降级）
     qids = sorted(proto_map)
+    rw_dir = wd._cache_dir
     fic_rows: list[dict] = []
-    for i in range(0, len(qids), 40):
-        chunk = qids[i:i + 40]
+    for q in qids:
+        f = rw_dir / f"rw_{q}.json"
+        if f.exists():
+            fic_rows.extend(json.loads(f.read_text(encoding="utf-8")))
+    missing = [q for q in qids if not (rw_dir / f"rw_{q}.json").exists()]
+    for i in range(0, len(missing), 40):
+        chunk = missing[i:i + 40]
         query = _REVERSE_SPARQL % {"protos": " ".join(f"wd:{q}" for q in chunk)}
-        d = await wd._get("https://query.wikidata.org/sparql",
-                          params={"query": query, "format": "json"},
-                          headers={"Accept": "application/sparql-results+json"}, ttl=None)
+        try:
+            d = await wd._get("https://query.wikidata.org/sparql",
+                              params={"query": query, "format": "json"},
+                              headers={"Accept": "application/sparql-results+json"}, ttl=None)
+        except Exception:
+            print(f"[reverse] 网络失败：{len(chunk)} 个原型本轮跳过（缓存已有 {len(fic_rows)} 条，稍后重跑补齐）")
+            break
+        per_proto: dict[str, list[dict]] = {}
         for b in d.get("results", {}).get("bindings", []):
             qid = b["fic"]["value"].rsplit("/", 1)[-1]
             label = (b.get("ficLabel", {}).get("value") or "").strip()
             if not label or label == qid:
                 continue  # 无 label 实体（多语言标签缺失），展示无意义
-            fic_rows.append({
+            per_proto.setdefault(b["proto"]["value"].rsplit("/", 1)[-1], []).append({
                 "proto": b["proto"]["value"].rsplit("/", 1)[-1],
                 "qid": qid,
                 "label": label,
                 "desc": b.get("ficDesc", {}).get("value", ""),
             })
-    print(f"[reverse] 反查到 {len(fic_rows)} 条 虚构化身（去重前）")
+        for q, rows in per_proto.items():
+            (rw_dir / f"rw_{q}.json").write_text(json.dumps(rows, ensure_ascii=False), encoding="utf-8")
+            fic_rows.extend(rows)
+    print(f"[reverse] 反查到 {len(fic_rows)} 条 虚构化身（含缓存）")
 
     fic_qids = sorted({r["qid"] for r in fic_rows})
     fic_claims = await wd.resolve_claims(fic_qids) if fic_qids else {}

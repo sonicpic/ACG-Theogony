@@ -8,9 +8,14 @@
 from __future__ import annotations
 
 import asyncio
+import contextlib
+import json
+import logging
 import re
 
 from theogony.providers.base import HttpProviderBase
+
+logger = logging.getLogger(__name__)
 
 _API = "https://www.wikidata.org/w/api.php"
 _SPARQL = "https://query.wikidata.org/sparql"
@@ -92,55 +97,114 @@ class WikidataProvider(HttpProviderBase):
             "match_text": x.get("match", {}).get("text", ""),
         } for x in d.get("search", [])]
 
+    def _qid_cache(self, qid: str, prefix: str, data: dict | None = None):
+        """逐 QID 缓存读写：命中返回数据；传入 data 时写入并返回。"""
+        f = self._cache_dir / f"{prefix}_{qid}.json"
+        if data is not None:
+            f.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+            return data
+        if f.exists():
+            return json.loads(f.read_text(encoding="utf-8"))
+        return None
+
     async def resolve_claims(self, qids: list[str], batch_size: int = 100) -> dict[str, dict]:
-        """批量取 P31/P144/P1074/P569。返回 {qid: {p31/p144/p1074: [...], birth_year: int|None}}。"""
+        """批量取 P31/P144/P1074/P569。逐 QID 缓存 + 批量补缺，离线时降级返回已缓存部分。"""
         out: dict[str, dict] = {}
+        missing: list[str] = []
+        for q in qids:
+            cached = self._qid_cache(q, "c")
+            if cached is not None:
+                out[q] = cached
+            else:
+                missing.append(q)
+        if not missing:
+            return out
+        try:
+            for i in range(0, len(missing), batch_size):
+                chunk = missing[i:i + batch_size]
+                values = " ".join(f"wd:{q}" for q in chunk)
+                query = (
+                    "SELECT ?q ?p31 ?p144 ?p1074 ?birth WHERE { VALUES ?q { " + values + " } "
+                    "OPTIONAL { ?q wdt:P31 ?p31 } OPTIONAL { ?q wdt:P144 ?p144 } "
+                    "OPTIONAL { ?q wdt:P1074 ?p1074 } OPTIONAL { ?q wdt:P569 ?birth } }"
+                )
+                d = await self._get(_SPARQL, params={"query": query, "format": "json"},
+                                    headers={"Accept": "application/sparql-results+json"}, ttl=None)
+                recs: dict[str, dict] = {q: {"p31": [], "p144": [], "p1074": [], "birth_year": None} for q in chunk}
+                for row in d.get("results", {}).get("bindings", []):
+                    q = row["q"]["value"].rsplit("/", 1)[-1]
+                    for prop in ("p31", "p144", "p1074"):
+                        if prop in row:
+                            recs[q][prop].append(row[prop]["value"].rsplit("/", 1)[-1])
+                    if "birth" in row and recs[q]["birth_year"] is None:
+                        # "+1853-01-01T00:00:00Z" → 1853
+                        with contextlib.suppress(ValueError, IndexError):
+                            recs[q]["birth_year"] = int(row["birth"]["value"][1:5])
+                for q, rec in recs.items():
+                    self._qid_cache(q, "c", rec)
+                    out[q] = rec
+                await asyncio.sleep(0)
+        except Exception:
+            logger.warning("resolve_claims 网络失败，降级返回已缓存 %d/%d 个实体", len(out), len(qids))
+        return out
+
+    async def entity_aliases(self, qids: list[str], batch_size: int = 50) -> dict[str, list[str]]:
+        """批量取实体全部别名（zh/ja/en/hans 等语言变体），用于跨库搜索。"""
+        out: dict[str, list[str]] = {}
         for i in range(0, len(qids), batch_size):
             chunk = qids[i:i + batch_size]
-            values = " ".join(f"wd:{q}" for q in chunk)
-            query = (
-                "SELECT ?q ?p31 ?p144 ?p1074 ?birth WHERE { VALUES ?q { " + values + " } "
-                "OPTIONAL { ?q wdt:P31 ?p31 } OPTIONAL { ?q wdt:P144 ?p144 } "
-                "OPTIONAL { ?q wdt:P1074 ?p1074 } OPTIONAL { ?q wdt:P569 ?birth } }"
-            )
-            d = await self._get(_SPARQL, params={"query": query, "format": "json"},
-                                headers={"Accept": "application/sparql-results+json"}, ttl=None)
-            for row in d.get("results", {}).get("bindings", []):
-                q = row["q"]["value"].rsplit("/", 1)[-1]
-                rec = out.setdefault(q, {"p31": [], "p144": [], "p1074": []})
-                for prop in ("p31", "p144", "p1074"):
-                    if prop in row:
-                        rec[prop].append(row[prop]["value"].rsplit("/", 1)[-1])
-            await asyncio.sleep(0)  # 让出事件循环
+            d = await self._get(_API, params={
+                "action": "wbgetentities", "ids": "|".join(chunk),
+                "props": "aliases", "format": "json",
+            }, ttl=None)
+            for qid, ent in d.get("entities", {}).items():
+                names: list[str] = []
+                for _lang, alias_list in ent.get("aliases", {}).items():
+                    names.extend(a["value"] for a in alias_list if a.get("value"))
+                out[qid] = names
+            await asyncio.sleep(0)
         return out
 
     async def labels_descriptions(self, qids: list[str], batch_size: int = 100) -> dict[str, dict]:
-        """批量取实体 zh/en label 与 description。返回 {qid: {label, description}}。"""
+        """批量取实体 zh/en label 与 description。逐 QID 缓存 + 批量补缺 + 离线降级。"""
         out: dict[str, dict] = {}
-        for i in range(0, len(qids), batch_size):
-            chunk = qids[i:i + batch_size]
-            values = " ".join(f"wd:{q}" for q in chunk)
-            query = (
-                "SELECT ?q ?l ?d WHERE { VALUES ?q { " + values + " } "
-                "OPTIONAL { ?q rdfs:label ?l FILTER(LANG(?l) IN (\"zh\", \"zh-hans\", \"en\")) } "
-                "OPTIONAL { ?q schema:description ?d FILTER(LANG(?d) IN (\"zh\", \"en\")) } }"
-            )
-            d = await self._get(_SPARQL, params={"query": query, "format": "json"},
-                                headers={"Accept": "application/sparql-results+json"}, ttl=None)
-            for row in d.get("results", {}).get("bindings", []):
-                q = row["q"]["value"].rsplit("/", 1)[-1]
-                rec = out.setdefault(q, {"label": "", "description": ""})
-                if "l" in row:
-                    lang = row["l"].get("xml:lang", "")
-                    val = row["l"]["value"]
-                    if not rec["label"] or lang.startswith("zh"):
-                        rec["label"] = val
-                if "d" in row:
-                    lang = row["d"].get("xml:lang", "")
-                    val = row["d"]["value"]
-                    if not rec["description"] or lang.startswith("zh"):
-                        rec["description"] = val
-            await asyncio.sleep(0)
+        missing: list[str] = []
+        for q in qids:
+            cached = self._qid_cache(q, "m")
+            if cached is not None:
+                out[q] = cached
+            else:
+                missing.append(q)
+        if not missing:
+            return out
+        try:
+            for i in range(0, len(missing), batch_size):
+                chunk = missing[i:i + batch_size]
+                values = " ".join(f"wd:{q}" for q in chunk)
+                query = (
+                    "SELECT ?q ?l ?d WHERE { VALUES ?q { " + values + " } "
+                    "OPTIONAL { ?q rdfs:label ?l FILTER(LANG(?l) IN (\"zh\", \"zh-hans\", \"en\")) } "
+                    "OPTIONAL { ?q schema:description ?d FILTER(LANG(?d) IN (\"zh\", \"en\")) } }"
+                )
+                d = await self._get(_SPARQL, params={"query": query, "format": "json"},
+                                    headers={"Accept": "application/sparql-results+json"}, ttl=None)
+                recs: dict[str, dict] = {q: {"label": "", "description": ""} for q in chunk}
+                for row in d.get("results", {}).get("bindings", []):
+                    q = row["q"]["value"].rsplit("/", 1)[-1]
+                    if "l" in row:
+                        val, lang = row["l"]["value"], row["l"].get("xml:lang", "")
+                        if not recs[q]["label"] or lang.startswith("zh"):
+                            recs[q]["label"] = val
+                    if "d" in row:
+                        val, lang = row["d"]["value"], row["d"].get("xml:lang", "")
+                        if not recs[q]["description"] or lang.startswith("zh"):
+                            recs[q]["description"] = val
+                for q, rec in recs.items():
+                    self._qid_cache(q, "m", rec)
+                    out[q] = rec
+                await asyncio.sleep(0)
+        except Exception:
+            logger.warning("labels_descriptions 网络失败，降级返回已缓存 %d/%d 个实体", len(out), len(qids))
         return out
 
     @staticmethod

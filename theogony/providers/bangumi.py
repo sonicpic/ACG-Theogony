@@ -33,3 +33,9 @@ class BangumiProvider(HttpProviderBase):
 
     async def character_detail(self, character_id: int) -> dict:
         return await self._get(f"https://api.bgm.tv/v0/characters/{character_id}", ttl=86400 * 30)
+
+    async def character_subjects(self, character_id: int) -> list[dict]:
+        """角色出演的作品列表（subject 含 type：1=书 2=动画 4=游戏 6=三次元）。"""
+        d = await self._get(f"https://api.bgm.tv/v0/characters/{character_id}/subjects",
+                            ttl=86400 * 30)
+        return d if isinstance(d, list) else []

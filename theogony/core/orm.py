@@ -81,6 +81,20 @@ class Work(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
 
 
+class Appearance(Base):
+    """角色 ↔ 作品 出演关系（多源统一）。"""
+
+    __tablename__ = "appearances"
+    __table_args__ = (UniqueConstraint("character_id", "work_id", name="uq_appearance"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    character_id: Mapped[str] = mapped_column(ForeignKey("characters.id", ondelete="CASCADE"), index=True)
+    work_id: Mapped[str] = mapped_column(ForeignKey("works.id", ondelete="CASCADE"), index=True)
+    role: Mapped[str] = mapped_column(String(32), default="")  # 主角/配角/客串
+    source: Mapped[str] = mapped_column(String(16), default="bangumi")
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+
+
 class Relationship(Base):
     __tablename__ = "relationships"
     __table_args__ = (
