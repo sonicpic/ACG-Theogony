@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Trophy } from "lucide-react";
 import { api } from "@/lib/api";
+import { fireScreenExplosion, hitsEasterEgg } from "@/lib/easterEgg";
 
 export default function GamePage() {
   const { data, isLoading } = useQuery({ queryKey: ["daily"], queryFn: api.daily });
@@ -84,6 +85,11 @@ export default function GamePage() {
             e.preventDefault();
             const name = input.trim();
             if (!name || attempts.includes(name)) return;
+            if (hitsEasterEgg(name)) {
+              fireScreenExplosion(); // 彩蛋：不消耗次数
+              setInput("");
+              return;
+            }
             guess.mutate(name);
           }}
           className="flex gap-2"

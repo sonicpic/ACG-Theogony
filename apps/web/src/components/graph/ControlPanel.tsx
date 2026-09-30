@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
 import { ChevronDown, FileDown, Image as ImageIcon, Network, RotateCcw, Search, Sparkles, Waypoints } from "lucide-react";
 import { api } from "@/lib/api";
+import { fireScreenExplosion, hitsEasterEgg } from "@/lib/easterEgg";
 import { CATEGORY_LABEL, RELATION_META, mythColor } from "@/lib/constants";
 import type { GraphDTO } from "@/lib/types";
 import { useGraphView } from "@/lib/store";
@@ -262,6 +263,11 @@ export function ControlPanel({ data }: { data: GraphDTO }) {
   async function runSearch(e: React.FormEvent) {
     e.preventDefault();
     if (!query.trim()) return;
+    if (hitsEasterEgg(query)) {
+      fireScreenExplosion();
+      setQuery("");
+      return;
+    }
     const res = await api.search(query.trim(), 5);
     if (res.hits.length) {
       store.select(res.hits[0].character.id);
