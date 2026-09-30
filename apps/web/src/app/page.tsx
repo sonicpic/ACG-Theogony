@@ -35,7 +35,10 @@ export default function GraphExplorerPage() {
     const classSet = new Set(store.classes);
 
     const nodes = data.nodes.filter((n) => {
-      if (n.kind === "myth") return store.showMythNodes;
+      if (n.kind === "myth") {
+        // 选了神话体系时，只保留所选体系的枢纽节点（其他大节点一并隐藏）
+        return store.showMythNodes && (!mythSet.size || mythSet.has(n.name));
+      }
       if (store.maxWikiId && n.wikiId > store.maxWikiId) return false;
       if (mythSet.size && !mythSet.has(n.mythology || "")) return false;
       if (classSet.size && !classSet.has(n.className)) return false;

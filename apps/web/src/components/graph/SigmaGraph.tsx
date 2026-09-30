@@ -203,7 +203,7 @@ export function SigmaGraph({ data }: { data: GraphDTO }) {
       labelFont: "system-ui, 'Microsoft YaHei', sans-serif",
       labelColor: { color: "#cbd5e1" },
       labelWeight: "500",
-      labelRenderedSizeThreshold: 15,
+      labelRenderedSizeThreshold: 3, // 标签尽早显示；靠下方网格去重防止密集区糊成一团
       labelGridCellSize: 140,
       edgeProgramClasses: { curved: EdgeCurveProgram },
       defaultEdgeType: "curved",
