@@ -1262,6 +1262,7 @@ export interface operations {
         parameters: {
             query?: {
                 limit?: number;
+                origin?: string | null;
             };
             header?: {
                 "x-review-token"?: string | null;

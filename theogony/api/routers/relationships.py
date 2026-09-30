@@ -92,18 +92,19 @@ def submit_relationship(payload: RelationshipSubmit):
 
 @router.get("/review/pending")
 def review_pending(
-    limit: int = Query(default=50, le=200),
+    limit: int = Query(default=50, le=500),
+    origin: str | None = Query(default=None),
     _: None = Depends(require_review_token),
 ):
     session = get_session()
     try:
-        rows = (
+        q = (
             session.query(Relationship)
             .filter(Relationship.status == ReviewStatus.PENDING.value)
-            .order_by(Relationship.id.desc())
-            .limit(limit)
-            .all()
         )
+        if origin:
+            q = q.filter(Relationship.origin == origin)
+        rows = q.order_by(Relationship.id.desc()).limit(limit).all()
         name_map = _name_map(session)
         return {"total": len(rows), "items": [rel_dto(r, name_map) for r in rows]}
     finally:

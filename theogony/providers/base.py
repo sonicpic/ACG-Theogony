@@ -113,10 +113,17 @@ class HttpProviderBase:
     async def _send_once(self, method: str, url: str, params: dict | None,
                          headers: dict | None, json_body: dict | None) -> Any:
         order = [self.prefer_proxy, not self.prefer_proxy] if self._use_proxy is None else [self._use_proxy]
+        last_err: Exception | None = None
         for use_proxy in order:
             client = self._client(use_proxy)
-            resp = await client.request(
-                method, url, params=params, headers=headers, json=json_body if json_body else None)
+            try:
+                resp = await client.request(
+                    method, url, params=params, headers=headers, json=json_body if json_body else None)
+            except httpx.HTTPError as e:
+                # 本通道连接失败 → 落到下一通道（代理/直连互为备份）
+                last_err = e
+                self._use_proxy = None
+                continue
             if resp.status_code in (200,):
                 self._use_proxy = use_proxy
                 return resp.json()
@@ -124,7 +131,7 @@ class HttpProviderBase:
                 raise _UpstreamError(f"HTTP {resp.status_code}: {resp.text[:120]}")
             # 4xx（参数问题等）不重试、不换通道，直接抛
             raise _UpstreamError(f"HTTP {resp.status_code}: {resp.text[:120]}")
-        raise _UpstreamError("no channel")
+        raise _UpstreamError(f"no channel ({last_err})")
 
     async def aclose(self) -> None:
         for c in self._clients.values():

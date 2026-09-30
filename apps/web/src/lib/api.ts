@@ -123,8 +123,11 @@ export const api = {
   submitRelation(payload: { sourceId: string; targetId: string; type: string; evidence: string; contributor?: string }) {
     return post<RelationshipDTO>("/relationships", payload);
   },
-  reviewPending(_token: string) {
-    return get<{ total: number; items: RelationshipDTO[] }>("/review/pending", { limit: 100 });
+  reviewPending(_token: string, origin?: string) {
+    return get<{ total: number; items: RelationshipDTO[] }>("/review/pending", {
+      limit: 200,
+      origin: origin && origin !== "all" ? origin : undefined,
+    });
   },
   reviewDecide(id: number, action: "approve" | "reject", token: string, note = "") {
     return post<RelationshipDTO>(`/review/${id}`, { action, note }, token);

@@ -9,13 +9,22 @@ import { api } from "@/lib/api";
 import { relColor, relLabel } from "@/lib/constants";
 import type { RelationshipDTO } from "@/lib/types";
 
+const ORIGIN_FILTERS = [
+  { key: "all", label: "全部" },
+  { key: "bootstrap", label: "文本挖掘" },
+  { key: "llm", label: "LLM 挖掘" },
+  { key: "user", label: "众包" },
+  { key: "wikidata", label: "结构化" },
+];
+
 export default function ReviewPage() {
   const [token, setToken] = useState(typeof window !== "undefined" ? localStorage.getItem("reviewToken") || "" : "");
+  const [origin, setOrigin] = useState("all");
   const qc = useQueryClient();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["review-pending"],
-    queryFn: () => api.reviewPending(token),
+    queryKey: ["review-pending", origin],
+    queryFn: () => api.reviewPending(token, origin),
     refetchInterval: 30000,
   });
   const { data: stats } = useQuery({ queryKey: ["stats"], queryFn: api.stats });
@@ -77,6 +86,21 @@ export default function ReviewPage() {
       </div>
 
       {batch.isIdle ? null : null}
+      <div className="mb-3 flex flex-wrap gap-1.5 text-xs">
+        {ORIGIN_FILTERS.map((f) => (
+          <button
+            key={f.key}
+            onClick={() => setOrigin(f.key)}
+            className={
+              origin === f.key
+                ? "rounded-full bg-zinc-200 px-3 py-1 font-medium text-zinc-900"
+                : "rounded-full border border-zinc-800 px-3 py-1 text-zinc-400 hover:border-zinc-600"
+            }
+          >
+            {f.label}
+          </button>
+        ))}
+      </div>
       {(data?.items.length || 0) > 0 && (
         <div className="mb-3 flex gap-2 text-xs">
           <button
@@ -126,8 +150,10 @@ export default function ReviewPage() {
                 >
                   {r.confidence === "high" ? "高置信" : "中置信"}
                 </span>
-                <span>{r.origin === "llm" ? "LLM 挖掘" : r.origin === "user" ? "众包提交" : r.origin}</span>
-                {r.evidence && <span className="truncate">依据：{r.evidence}</span>}
+                <span>
+                  {{ llm: "LLM 挖掘", user: "众包提交", bootstrap: "文本挖掘", wikidata: "结构化", bangumi: "Bangumi", seed: "种子" }[r.origin] || r.origin}
+                </span>
+                {r.evidence && <span className="whitespace-normal break-all">依据：{r.evidence}</span>}
               </div>
             </div>
             <div className="flex shrink-0 gap-1.5">

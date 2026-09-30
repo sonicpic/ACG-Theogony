@@ -93,14 +93,14 @@ export default function ChallengePage() {
   // 每日题目：距离 3-5 的确定性角色对
   const puzzle = useMemo(() => {
     if (!data || adj.size === 0) return null;
-    const chars = data.nodes.filter((n) => n.kind === "character" && n.className !== "原型" && (adj.get(n.id)?.length || 0) >= 2);
+    const chars = data.nodes.filter((n) => n.kind === "character" && n.className !== "原型" && n.className !== "神话人物" && (adj.get(n.id)?.length || 0) >= 2);
     for (let attempt = 0; attempt < 12; attempt++) {
       const from = seededPick(chars, `${today}-from-${attempt}`);
       const { dist, prev } = bfs(adj, from.id);
       const candidates = [...dist.entries()].filter(([id, d]) => {
         if (d < 3 || d > 5) return false;
         const n = nodes.get(id);
-        return n && n.kind === "character" && n.className !== "原型" && id !== from.id;
+        return n && n.kind === "character" && n.className !== "原型" && n.className !== "神话人物" && id !== from.id;
       });
       if (candidates.length >= 3) {
         const [toId] = seededPick(candidates, `${today}-to-${attempt}`);

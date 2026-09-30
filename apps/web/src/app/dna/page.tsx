@@ -37,7 +37,7 @@ export default function DnaPage() {
     persist(selected.includes(id) ? selected.filter((x) => x !== id) : [...selected, id]);
 
   const randomize = () => {
-    const chars = (data?.nodes || []).filter((n) => n.kind === "character" && n.className !== "原型" && n.mythology);
+    const chars = (data?.nodes || []).filter((n) => n.kind === "character" && n.className !== "原型" && n.className !== "神话人物" && n.mythology);
     const pool = [...chars].sort(() => Math.random() - 0.5).slice(0, 20);
     persist(pool.map((n) => n.id));
   };
@@ -46,7 +46,7 @@ export default function DnaPage() {
     const kw = query.trim().toLowerCase();
     if (!kw || !data) return [];
     return data.nodes
-      .filter((n) => n.kind === "character" && n.className !== "原型" && n.name.toLowerCase().includes(kw))
+      .filter((n) => n.kind === "character" && n.className !== "原型" && n.className !== "神话人物" && n.name.toLowerCase().includes(kw))
       .slice(0, 8);
   }, [query, data]);
 
