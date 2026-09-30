@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from theogony.api.routers import (
     ai,
     characters,
+    evolution,
     exports,
     games,
     graph,
@@ -72,6 +73,7 @@ def create_app() -> FastAPI:
         stats.router,
         games.router,
         prototypes.router,
+        evolution.router,
         ai.router,
         exports.router,
         proxy.router,

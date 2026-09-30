@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
-import { Radar, Search, X } from "lucide-react";
+import { Radar, Search, GitCompare, X } from "lucide-react";
 import { api } from "@/lib/api";
 import { imgProxy } from "@/lib/types";
 import { mythColor } from "@/lib/constants";
@@ -52,6 +52,14 @@ export default function PrototypesPage() {
   }, [data, q]);
 
   const selected = items.find((p) => p.id === selectedId) || data?.items.find((p) => p.id === selectedId) || null;
+
+  const { data: evo } = useQuery({
+    queryKey: ["evolution", selectedId],
+    queryFn: () => api.evolution(selectedId!),
+    enabled: !!selectedId,
+    staleTime: Infinity,
+  });
+  const [showEvo, setShowEvo] = useState(false);
 
   const openInGraph = (id: string) => {
     select(id);
@@ -173,12 +181,73 @@ export default function PrototypesPage() {
               </button>
             </div>
 
-            <button
-              onClick={() => openInGraph(selected.id)}
-              className="mt-3 w-full rounded-lg bg-sky-600/80 py-2 text-xs font-medium hover:bg-sky-500"
-            >
-              在图谱中查看化身网络
-            </button>
+            <div className="mt-3 flex gap-2">
+              <button
+                onClick={() => openInGraph(selected.id)}
+                className="flex-1 rounded-lg bg-sky-600/80 py-2 text-xs font-medium hover:bg-sky-500"
+              >
+                在图谱中查看
+              </button>
+              <button
+                onClick={() => setShowEvo(!showEvo)}
+                className={
+                  "flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium " +
+                  (showEvo ? "bg-amber-600/80" : "border border-zinc-700 text-zinc-300 hover:border-amber-500/60")
+                }
+              >
+                <GitCompare size={12} /> 演化对比
+              </button>
+            </div>
+
+            {showEvo && evo && evo.rows.length > 0 && (
+              <section className="mt-4">
+                <div className="mb-2 text-xs font-semibold text-zinc-400">
+                  化身演化矩阵（{evo.rows.length} 个化身）
+                </div>
+                <div className="overflow-x-auto rounded-lg border border-zinc-800">
+                  <table className="w-full text-left text-[11px]">
+                    <thead>
+                      <tr className="border-b border-zinc-800 bg-zinc-900/60 text-zinc-500">
+                        <th className="px-2 py-1.5">化身</th>
+                        <th className="px-2 py-1.5">性别</th>
+                        <th className="px-2 py-1.5">职阶</th>
+                        <th className="px-2 py-1.5">阵营</th>
+                        <th className="px-2 py-1.5">来源</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {evo.rows.map((r) => (
+                        <tr key={r.id} className="border-b border-zinc-800/50">
+                          <td className="max-w-[140px] truncate px-2 py-1.5">
+                            {r.source === "fgo" ? (
+                              <Link href={`/character/${r.id}`} className="text-zinc-200 hover:text-sky-300">
+                                {r.name}
+                              </Link>
+                            ) : (
+                              <span className="text-zinc-400">{r.name}</span>
+                            )}
+                          </td>
+                          <td className="px-2 py-1.5 text-zinc-300">{r.gender || "—"}</td>
+                          <td className="px-2 py-1.5 text-amber-300/80">{r.className || "—"}</td>
+                          <td className="px-2 py-1.5 text-zinc-400">{r.alignment || "—"}</td>
+                          <td className="px-2 py-1.5">
+                            <span className="rounded bg-zinc-800 px-1.5 py-0.5 text-[10px] text-zinc-400">
+                              {r.source === "fgo" ? "FGO" : r.media === "acg" ? "ACG" : "其他媒体"}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {evo.rows.some((r) => r.works.length > 0) && (
+                  <div className="mt-1.5 text-[10px] text-zinc-600">
+                    {evo.rows.filter((r) => r.works.length > 0).slice(0, 3).map((r) =>
+                      `${r.name}: ${r.works.slice(0, 2).join("、")}`).join(" ｜ ")}
+                  </div>
+                )}
+              </section>
+            )}
 
             {selected.fgo.length > 0 && (
               <section className="mt-4">

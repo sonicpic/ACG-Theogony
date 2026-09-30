@@ -6,6 +6,7 @@ import type {
   GraphDTO,
   NlqFilters,
   PathDTO,
+  EvolutionData,
   PrototypeItem,
   RelationshipDTO,
   SearchHit,
@@ -50,6 +51,9 @@ async function post<T>(path: string, body: unknown, token?: string): Promise<T> 
 export const api = {
   prototypes(): Promise<{ items: PrototypeItem[] }> {
     return get("/prototypes");
+  },
+  evolution(pid: string): Promise<EvolutionData> {
+    return get(`/prototypes/${encodeURIComponent(pid)}/evolution`);
   },
   graph(params?: {
     mythologies?: string[];

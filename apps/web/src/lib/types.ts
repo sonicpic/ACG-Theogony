@@ -177,3 +177,20 @@ export interface PrototypeItem {
   incarnationCount: number;
   worksCount: number;
 }
+
+export interface EvolutionRow {
+  id: string;
+  name: string;
+  source: string;
+  media: string;
+  className: string;
+  gender: string;
+  alignment: string;
+  mythology: string;
+  works: string[];
+}
+
+export interface EvolutionData {
+  prototype: { id: string; name: string; mythology: string; qid: string };
+  rows: EvolutionRow[];
+}

@@ -1203,6 +1203,49 @@
         }
       }
     },
+    "/api/prototypes/{pid}/evolution": {
+      "get": {
+        "tags": [
+          "prototypes"
+        ],
+        "summary": "Prototype Evolution",
+        "description": "同一原型的化身属性对比矩阵（用户最初的产品愿景：改编程度差异）。",
+        "operationId": "prototype_evolution_api_prototypes__pid__evolution_get",
+        "parameters": [
+          {
+            "name": "pid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Pid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvolutionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/ai/ask": {
       "post": {
         "tags": [
@@ -1801,6 +1844,84 @@
           "guess"
         ],
         "title": "DailyGuess"
+      },
+      "EvolutionResponse": {
+        "properties": {
+          "prototype": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Prototype"
+          },
+          "rows": {
+            "items": {
+              "$ref": "#/components/schemas/EvolutionRow"
+            },
+            "type": "array",
+            "title": "Rows"
+          }
+        },
+        "type": "object",
+        "required": [
+          "prototype",
+          "rows"
+        ],
+        "title": "EvolutionResponse"
+      },
+      "EvolutionRow": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "media": {
+            "type": "string",
+            "title": "Media",
+            "default": ""
+          },
+          "className": {
+            "type": "string",
+            "title": "Classname",
+            "default": ""
+          },
+          "gender": {
+            "type": "string",
+            "title": "Gender",
+            "default": ""
+          },
+          "alignment": {
+            "type": "string",
+            "title": "Alignment",
+            "default": ""
+          },
+          "mythology": {
+            "type": "string",
+            "title": "Mythology",
+            "default": ""
+          },
+          "works": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Works",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "source"
+        ],
+        "title": "EvolutionRow"
       },
       "GraphDTO": {
         "properties": {

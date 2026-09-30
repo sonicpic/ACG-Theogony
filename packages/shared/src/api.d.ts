@@ -360,6 +360,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/prototypes/{pid}/evolution": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Prototype Evolution
+         * @description 同一原型的化身属性对比矩阵（用户最初的产品愿景：改编程度差异）。
+         */
+        get: operations["prototype_evolution_api_prototypes__pid__evolution_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/ai/ask": {
         parameters: {
             query?: never;
@@ -664,6 +684,54 @@ export interface components {
         DailyGuess: {
             /** Guess */
             guess: string;
+        };
+        /** EvolutionResponse */
+        EvolutionResponse: {
+            /** Prototype */
+            prototype: {
+                [key: string]: unknown;
+            };
+            /** Rows */
+            rows: components["schemas"]["EvolutionRow"][];
+        };
+        /** EvolutionRow */
+        EvolutionRow: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Source */
+            source: string;
+            /**
+             * Media
+             * @default
+             */
+            media: string;
+            /**
+             * Classname
+             * @default
+             */
+            className: string;
+            /**
+             * Gender
+             * @default
+             */
+            gender: string;
+            /**
+             * Alignment
+             * @default
+             */
+            alignment: string;
+            /**
+             * Mythology
+             * @default
+             */
+            mythology: string;
+            /**
+             * Works
+             * @default []
+             */
+            works: string[];
         };
         /** GraphDTO */
         GraphDTO: {
@@ -1621,6 +1689,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PrototypesResponse"];
+                };
+            };
+        };
+    };
+    prototype_evolution_api_prototypes__pid__evolution_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                pid: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EvolutionResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
