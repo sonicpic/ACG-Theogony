@@ -6,6 +6,7 @@ import type {
   GraphDTO,
   NlqFilters,
   PathDTO,
+  PrototypeItem,
   RelationshipDTO,
   SearchHit,
   StatsDTO,
@@ -47,6 +48,9 @@ async function post<T>(path: string, body: unknown, token?: string): Promise<T> 
 }
 
 export const api = {
+  prototypes(): Promise<{ items: PrototypeItem[] }> {
+    return get("/prototypes");
+  },
   graph(params?: {
     mythologies?: string[];
     types?: string[];

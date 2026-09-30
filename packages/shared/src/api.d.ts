@@ -340,6 +340,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/prototypes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Prototypes
+         * @description 全部原型及其化身（FGO/跨媒体）与改编作品，一次取全（量级 ~百）。
+         */
+        get: operations["list_prototypes_api_prototypes_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/ai/ask": {
         parameters: {
             query?: never;
@@ -753,6 +773,13 @@ export interface components {
              * @default
              */
             label: string;
+        };
+        /** PrototypesResponse */
+        PrototypesResponse: {
+            /** Items */
+            items: {
+                [key: string]: unknown;
+            }[];
         };
         /**
          * RelationOrigin
@@ -1573,6 +1600,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": unknown;
+                };
+            };
+        };
+    };
+    list_prototypes_api_prototypes_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PrototypesResponse"];
                 };
             };
         };

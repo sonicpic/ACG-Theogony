@@ -136,3 +136,37 @@ export function imgProxy(url: string): string {
   if (!url) return "";
   return `/api/img?url=${encodeURIComponent(url)}`;
 }
+
+/** 同源角色雷达（/api/prototypes） */
+
+export interface PrototypeFgoIncarnation {
+  id: string;
+  name: string;
+  className: string;
+  imageUrl: string;
+}
+
+export interface PrototypeOtherIncarnation {
+  id: string;
+  name: string;
+  media: string;
+  description: string;
+}
+
+export interface PrototypeWork {
+  id: string;
+  name: string;
+  kind: string;
+}
+
+export interface PrototypeItem {
+  id: string;
+  name: string;
+  mythology: string;
+  qid: string;
+  fgo: PrototypeFgoIncarnation[];
+  others: PrototypeOtherIncarnation[];
+  works: PrototypeWork[];
+  incarnationCount: number;
+  worksCount: number;
+}

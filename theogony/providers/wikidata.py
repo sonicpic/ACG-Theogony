@@ -40,6 +40,14 @@ _GENERIC_CLASS_RE = re.compile(
     re.IGNORECASE,
 )
 
+# 神话"体系"实体（希腊神话/北欧神话这类集合概念，不是人物原型——
+# "based on Greek mythology" 的角色应解析到具体人物）
+_MYTH_SYSTEM_RE = re.compile(
+    # 仅匹配体系本身（"Greek mythology"/"神話"）；"figure in Greek mythology" 是人物类，不匹配
+    r"^[a-z]+ mythology$|^mythology$|^神話$|^神话$|religion|宗教|^folklore$|legendary cycle|傳說集|body of myths",
+    re.IGNORECASE,
+)
+
 # 虚构实体类（命中 → 这是"角色"实体，不是原型；Tier A 场景外一律排除）
 _FICTIONAL_CLASS_RE = re.compile(
     r"fictional|虚构|虛構|架空|キャラクター|character|anime|manga|video game",
@@ -156,7 +164,8 @@ class WikidataProvider(HttpProviderBase):
             return any(re_.search(f'{m.get("label", "")} {m.get("description", "")}') for m in metas)
 
         if _hit(_MYTHIC_CLASS_RE) and not _hit(_GENERIC_CLASS_RE):
-            return True
+            # 神话"体系"集合实体（希腊神话本身）不是人物原型
+            return not _hit(_MYTH_SYSTEM_RE)
         generic_hit = _hit(_GENERIC_CLASS_RE) or bool(_GENERIC_CLASS_RE.search(desc))
         if _STRONG_MYTHIC_RE.search(desc) and not generic_hit:
             return True

@@ -1165,6 +1165,28 @@
         }
       }
     },
+    "/api/prototypes": {
+      "get": {
+        "tags": [
+          "prototypes"
+        ],
+        "summary": "List Prototypes",
+        "description": "全部原型及其化身（FGO/跨媒体）与改编作品，一次取全（量级 ~百）。",
+        "operationId": "list_prototypes_api_prototypes_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrototypesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/ai/ask": {
       "post": {
         "tags": [
@@ -1967,6 +1989,23 @@
           "type"
         ],
         "title": "PathStepDTO"
+      },
+      "PrototypesResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "PrototypesResponse"
       },
       "RelationOrigin": {
         "type": "string",

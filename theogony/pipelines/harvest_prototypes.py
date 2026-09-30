@@ -212,10 +212,14 @@ async def harvest(wd: WikidataProvider, seeds: list[dict], max_per_proto: int, m
                           params={"query": query, "format": "json"},
                           headers={"Accept": "application/sparql-results+json"}, ttl=None)
         for b in d.get("results", {}).get("bindings", []):
+            qid = b["fic"]["value"].rsplit("/", 1)[-1]
+            label = (b.get("ficLabel", {}).get("value") or "").strip()
+            if not label or label == qid:
+                continue  # 无 label 实体（多语言标签缺失），展示无意义
             fic_rows.append({
                 "proto": b["proto"]["value"].rsplit("/", 1)[-1],
-                "qid": b["fic"]["value"].rsplit("/", 1)[-1],
-                "label": b.get("ficLabel", {}).get("value", ""),
+                "qid": qid,
+                "label": label,
                 "desc": b.get("ficDesc", {}).get("value", ""),
             })
     print(f"[reverse] 反查到 {len(fic_rows)} 条 虚构化身（去重前）")

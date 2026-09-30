@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
-import { Network, BadgeCheck, BarChart3, Gamepad2 } from "lucide-react";
+import { Network, BadgeCheck, BarChart3, Gamepad2, Radar } from "lucide-react";
 
 const items = [
   { href: "/", label: "图谱", icon: Network },
+  { href: "/prototypes", label: "原型雷达", icon: Radar },
   { href: "/review", label: "审核", icon: BadgeCheck },
   { href: "/stats", label: "看板", icon: BarChart3 },
   { href: "/game", label: "猜角色", icon: Gamepad2 },
