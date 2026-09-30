@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from datetime import date
 
 from fastapi import APIRouter, HTTPException
@@ -9,7 +10,7 @@ from pydantic import BaseModel, Field
 
 from theogony.core.db import get_session
 from theogony.core.graph import GraphService
-from theogony.core.orm import Character
+from theogony.core.orm import Alias, Character
 from theogony.core.search import hybrid_search
 
 router = APIRouter(tags=["games"])
@@ -75,6 +76,36 @@ def daily_game():
     }
 
 
+_BRACKET_TRANS = str.maketrans("（）〔〕［］", "()()[]")
+
+
+def _normalize(s: str) -> str:
+    """全角→半角括号 + 去空白 + 小写：让 美狄亚(Lily) 也能命中 美狄亚〔Lily〕。"""
+    return s.strip().translate(_BRACKET_TRANS).lower()
+
+
+def _match_character(guess: str) -> str:
+    """精确匹配名/别名（全表查询，不依赖搜索排名——FTS 排名可能把本尊挤出前三）。"""
+    session = get_session()
+    try:
+        c = session.query(Character).filter(Character.name == guess).first()
+        if c:
+            return c.id
+        a = session.query(Alias).filter(Alias.alias == guess).first()
+        if a:
+            return a.character_id
+        # 归一化兜底：全角/半角括号与大小写（美狄亚(Lily) ↔ 美狄亚〔Lily〕）
+        ng = _normalize(guess)
+        core = re.split(r"[（）〔〕\[\]()]", guess.strip(), maxsplit=1)[0].strip()
+        if core:
+            for c2 in session.query(Character).filter(Character.name.like(f"%{core}%")).limit(80):
+                if _normalize(c2.name) == ng:
+                    return c2.id
+        return ""
+    finally:
+        session.close()
+
+
 @router.post("/games/daily/guess")
 def daily_guess(payload: DailyGuess):
     today = date.today()
@@ -82,19 +113,22 @@ def daily_guess(payload: DailyGuess):
     if target is None:
         raise HTTPException(500, "题库为空")
     guess = payload.guess.strip()
-    # 支持名称/别名/ID
-    matched_id = ""
+    # 支持名称/别名/ID；名称与别名走全表精确匹配，搜索仅作最后兜底
     if guess.lower().startswith("c") and guess[1:].isdigit():
         matched_id = guess
     else:
-        ranked, _ = hybrid_search(guess, limit=3)
-        for cid, score in ranked:
+        matched_id = _match_character(guess)
+        if not matched_id:
+            ranked, _ = hybrid_search(guess, limit=10)
+            # 搜索候选里做归一化等值比较（大小写/全半角括号）
             session = get_session()
             try:
-                c = session.get(Character, cid)
-                if c and (c.name == guess or guess in (a.alias for a in c.aliases)):
-                    matched_id = cid
-                    break
+                ng = _normalize(guess)
+                for cid, _score in ranked:
+                    c = session.get(Character, cid)
+                    if c and (_normalize(c.name) == ng or any(_normalize(a.alias) == ng for a in c.aliases)):
+                        matched_id = cid
+                        break
             finally:
                 session.close()
     correct = matched_id == target.id
