@@ -22,12 +22,12 @@ import asyncio
 import json
 import re
 import time
-import unicodedata
 
 from sqlalchemy import select
 
 from theogony.core.db import get_session, init_db, rebuild_fts
 from theogony.core.graph import GraphService
+from theogony.core.names import normalize_name
 from theogony.core.orm import Alias, Character, Relationship, Work
 from theogony.providers.wikidata import WikidataProvider
 
@@ -48,22 +48,6 @@ _WORK_CLASS_RE = re.compile(
     r"动画|漫画|游戏|小说|电影|电视剧|影集|文學作品|文学作品|童话|音樂劇|音乐剧|畫作|画作|歌剧|戲劇",
     re.IGNORECASE,
 )
-
-
-# 中文音译常见变体折叠（同一人名的不同译法：恺撒/凯撒、阿蒂拉/阿提拉）
-_TRANSLIT_FOLD = str.maketrans({
-    "恺": "凯", "蒂": "提", "佛": "弗", "茨": "兹", "莎": "沙",
-    "娅": "亚", "锹": "乔",
-    "ō": "o", "ū": "u", "ā": "a", "ē": "e", "ī": "i",
-    "ö": "o", "ü": "u", "é": "e", "á": "a",
-})
-
-
-def normalize_name(s: str) -> str:
-    s = unicodedata.normalize("NFKC", s or "")
-    for ch in " \u3000·・.。'\"''\"·-‐–—_/／（）()〔〕[]":
-        s = s.replace(ch, "")
-    return s.lower().translate(_TRANSLIT_FOLD)
 
 
 def _work_kind(class_text: str) -> str:

@@ -22,20 +22,12 @@ import argparse
 import asyncio
 import json
 import time
-import unicodedata
 from collections import Counter
 
 from theogony.core.config import get_settings
+from theogony.core.names import normalize_name
 from theogony.providers.anilist import AniListProvider
 from theogony.providers.wikidata import WikidataProvider
-
-
-def normalize_name(s: str) -> str:
-    """名称归一化：NFKC（全半角）、去空白/中间点/引号、小写。"""
-    s = unicodedata.normalize("NFKC", s or "")
-    for ch in " \u3000·・.。'\"''\"·-‐–—_/／":
-        s = s.replace(ch, "")
-    return s.lower()
 
 
 def name_variants(char: dict) -> list[tuple[str, str]]:

@@ -21,26 +21,18 @@ import argparse
 import asyncio
 import json
 import time
-import unicodedata
 
 from sqlalchemy import select
 
 from theogony.core.db import get_session, init_db, rebuild_fts
 from theogony.core.graph import GraphService
+from theogony.core.names import normalize_name
 from theogony.core.orm import Alias, Appearance, Character, Relationship, Work
 from theogony.providers.bangumi import BangumiProvider
 from theogony.providers.wikidata import WikidataProvider
 
 # Bangumi subject type → 作品 kind
 _SUBJECT_KIND = {1: "novel", 2: "anime", 3: "manga", 4: "game", 6: "tv"}
-
-
-def normalize_name(s: str) -> str:
-    s = unicodedata.normalize("NFKC", s or "")
-    for ch in " \u3000·・.。'\"''\"·-‐–—_/／（）()〔〕[]":
-        s = s.replace(ch, "")
-    return s.lower()
-
 
 def load_prototypes(limit: int | None) -> list[dict]:
     session = get_session()
