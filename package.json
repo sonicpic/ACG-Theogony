@@ -21,7 +21,9 @@
     "research": "uv run python -u -m theogony.pipelines.luna_research",
     "export-data": "uv run python -u -m theogony.pipelines.export_data",
     "test:py": "uv run pytest",
-    "harvest": "python -u -m theogony.pipelines.harvest_prototypes"
+    "harvest": "python -u -m theogony.pipelines.harvest_prototypes",
+    "crawl-corpus": "python -u -m theogony.pipelines.crawl_corpus",
+    "bootstrap": "python -u -m theogony.pipelines.bootstrap_relations"
   },
   "devDependencies": {
     "openapi-typescript": "^7.5.0"

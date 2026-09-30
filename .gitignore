@@ -48,3 +48,6 @@ npm-debug.log*
 
 # Private engineering notebook (never commit)
 dev-notes/
+
+# 语料库（由 crawl_corpus 从 provider 缓存生成，可重放）
+data/corpus/
